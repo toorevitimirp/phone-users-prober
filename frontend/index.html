@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>图片识别</title>
+  <title>手机用户分析系统</title>
   <link rel="stylesheet" href="static/layui/css/layui.css" >
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">手机用户分析系统</div>
+    <div class="layui-logo">手机用户分析</div>
     <!-- 头部区域（可配合layui已有的水平导航） -->
-    <!-- <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item"><a href="">数据上传</a></li>
-      <li class="layui-nav-item"><a href="">数据可视化</a></li>
-      <li class="layui-nav-item"><a href="">用户分析</a></li>
+    <ul class="layui-nav layui-layout-left">
+      <li class="layui-nav-item"><a href="">主页</a></li>
+      <li class="layui-nav-item"><a href="">数据上传说明</a></li>
+      <li class="layui-nav-item"><a href="">关于此项目</a></li>
       <li class="layui-nav-item">
         <a href="javascript:;">其它系统</a>
         <dl class="layui-nav-child">
@@ -23,7 +23,7 @@
           <dd><a href="">授权管理</a></dd>
         </dl>
       </li>
-    </ul> -->
+    </ul>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
@@ -36,30 +36,31 @@
   
   <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
-      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
         <li class="layui-nav-item layui-nav-itemed">
-          <a class="" href="javascript:;">训练数据</a>
-          <dl class="layui-this">
+          <a class="" href="javascript:;">收集与清理</a>
+          <dl class="layui-nav-child">
             <dd><a href="javascript:;">csv</a></dd>
           </dl>
         </li>
         <li class="layui-nav-item">
-          <a href="javascript:;">数据可视化</a>
+          <a href="javascript:;">统计与可视化</a>
           
         </li>
         <li class="layui-nav-item">
-                <a href="javascript:;">用户分析</a>
-                <dl class="layui-nav-child">
-                  <dd><a href="javascript:;">后向传播</a></dd>
-                  <dd><a href="javascript:;">SVM</a></dd>
-                </dl>
+            <a href="javascript:;">训练与预测</a>
+            <dl class="layui-nav-child">
+              <dd><a href="javascript:;">后向传播</a></dd>
+              <dd><a href="javascript:;">SVM</a></dd>
+              <dd><a href="javascript:;">贝叶斯</a></dd>
+            </dl>
         </li>
       </ul>
     </div>
   </div>
   
   <div class="layui-body">
+  <div>
       <iframe src="./html/upload.html" width="100%" height="100%"></iframe>
   </div>
   
