@@ -1,7 +1,6 @@
 from flask import Flask
 from etl.washer import washer
-
-
+print(__file__)
 app = Flask(__name__)
 app.register_blueprint(washer)
 

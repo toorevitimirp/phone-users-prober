@@ -2,7 +2,8 @@ import pandas as pd
 from flask import jsonify, request,Blueprint
 from flask_cors import cross_origin
 from statistic.describe import describe
-from database import save_file
+from etl.database import save_file
+
 washer = Blueprint('washer', __name__,url_prefix='/wash-data')
 
 def z_score(clean_data):
@@ -40,7 +41,8 @@ def get_data_from_request():
         labels = all_users_id.isin(complain_users).astype("int")
 
         user_data["label"] = labels
-        print(collection)
+        res = save_file(collection,user_data.to_json(orient='records'))
+        return res
         # save_file(collection,user_data)
         
         # clean_data = wash_data(user_data)

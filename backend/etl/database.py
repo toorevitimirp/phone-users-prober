@@ -1,5 +1,5 @@
 import pymongo
-
+import json
 def _connect_mongo(host, port, username=None, password=None,db='phone-number-prober'):
     """ A util for making a connection to mongo """
     if username and password:
@@ -14,7 +14,13 @@ def _connect_mongo(host, port, username=None, password=None,db='phone-number-pro
 
 def save_file(collection,user_data):
     db = _connect_mongo(host='localhost',port=27017)
-    print(db)
+
+    collist = db. list_collection_names()
+    if collection in collist:
+        return {'result':False,'msg':'名称已存在'}
+    db[collection].insert_many(json.loads(user_data))
+    return {'result':True,'msg':'上传成功'}
+    
 
 def main():
     save_file()
