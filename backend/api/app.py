@@ -1,5 +1,5 @@
 from flask import Flask
-from data_cleaning.data_washer import washer
+from etl.washer import washer
 
 
 app = Flask(__name__)
