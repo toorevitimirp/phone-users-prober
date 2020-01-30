@@ -1,5 +1,6 @@
 import pymongo
 import json
+from  api.logger import log
 def _connect_mongo(host, port, username=None, password=None,db='phone-number-prober'):
     """ A util for making a connection to mongo """
     if username and password:
@@ -11,7 +12,6 @@ def _connect_mongo(host, port, username=None, password=None,db='phone-number-pro
 # client = pymongo.MongoClient('mongodb://localhost:27017/')
 # db = client['phone-number-prober']
 # print(collist)
-
 def save_file(collection,user_data):
     db = _connect_mongo(host='localhost',port=27017)
 
@@ -19,6 +19,7 @@ def save_file(collection,user_data):
     if collection in collist:
         return {'result':False,'msg':'名称已存在'}
     db[collection].insert_many(json.loads(user_data))
+    log("上传文件到数据库成功")
     return {'result':True,'msg':'上传成功'}
     
 

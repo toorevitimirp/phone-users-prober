@@ -3,6 +3,7 @@ from flask import jsonify, request,Blueprint
 from flask_cors import cross_origin
 from statistic.describe import describe
 from etl.database import save_file
+from api.app import app
 
 washer = Blueprint('washer', __name__,url_prefix='/wash-data')
 
