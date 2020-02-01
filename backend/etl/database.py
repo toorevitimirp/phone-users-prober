@@ -1,6 +1,8 @@
 import pymongo,json,time,os
 from  api.logger import log
 from pandas import DataFrame
+
+data_info = "data-info" #储存集合元数据
 def _connect_mongo(host, port, username=None, password=None,db='phone-number-prober'):
     """ A util for making a connection to mongo """
     if username and password:
@@ -36,7 +38,7 @@ def save_file(collection,user_data,length):
     else:
         try:
             info = {'name':collection, 'length':length, 'trained':0}
-            db["collection-info"].insert_one(info)
+            db[data_info].insert_one(info)
         except BaseException as e:
             log("exception"+str(e))
             db[collection].drop()
@@ -55,5 +57,5 @@ def load_data(collection):
 
 def get_collection_info():
     db = _connect_mongo(host='localhost',port=27017)
-    res =  list(db["collection-info"].find({},{ "_id": 0,}))
+    res =  list(db[data_info].find({},{ "_id": 0,}))
     return res

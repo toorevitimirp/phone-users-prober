@@ -10,9 +10,12 @@ data_center = Blueprint('data_center', __name__,url_prefix='/data-center/api/v1.
 @cross_origin()
 def post_data():
     if request.method == 'POST':
+        collection = request.values['collection']
+        if collection == 'data-info':
+            return {'result':500,'msg':'上传失败，数据集合名称不能为data-info'}
+
         user_data = pd.read_csv(request.files["data_all"],encoding='utf-8')
         complain_users = pd.read_csv(request.files["data_label"],encoding='utf-8')["user_id"]
-        collection = request.values['collection']
         all_users_id = user_data["user_id"]
         labels = all_users_id.isin(complain_users).astype("int")
 
