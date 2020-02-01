@@ -6,72 +6,60 @@
   <title>手机用户分析系统</title>
   <link rel="stylesheet" href="static/layui/css/layui.css" >
 </head>
-<body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
-  <div class="layui-header">
-    <div class="layui-logo">手机用户分析</div>
-    <!-- 头部区域（可配合layui已有的水平导航） -->
-    <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item"><a href="">主页</a></li>
-      <li class="layui-nav-item"><a href="">数据上传说明</a></li>
-      <li class="layui-nav-item"><a href="">关于此项目</a></li>
-      <li class="layui-nav-item">
-        <a href="javascript:;">其它系统</a>
-        <dl class="layui-nav-child">
-          <dd><a href="">邮件管理</a></dd>
-          <dd><a href="">消息管理</a></dd>
-          <dd><a href="">授权管理</a></dd>
-        </dl>
-      </li>
-    </ul>
-    <ul class="layui-nav layui-layout-right">
-      <li class="layui-nav-item">
-        <a href="javascript:;">
-          登录
-        </a>
-      </li>
-      <li class="layui-nav-item"><a href="">注册</a></li>
-    </ul>
-  </div>
-  
-  <div class="layui-side layui-bg-black">
-    <div class="layui-side-scroll">
-      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-        <li class="layui-nav-item layui-nav-itemed">
-          <a class="" href="javascript:;">收集与清理</a>
-          <dl class="layui-nav-child">
-            <dd><a href="javascript:;">csv</a></dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item">
-          <a href="javascript:;">统计与可视化</a>
-          
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">训练与预测</a>
+<body class="layui-layout-body" style="text-align:center" >
+    <div class="layui-layout layui-layout-admin">
+      <div class="layui-header layui-bg-green">
+        <div class="layui-logo layui-bg-cyan">
+          手机用户分析系统
+        </div>
+        <ul class="layui-nav layui-layout-left">
+          <li class="layui-nav-item">
+            <a href="javascript:;">数据中心</a>
             <dl class="layui-nav-child">
-              <dd><a href="javascript:;">后向传播</a></dd>
-              <dd><a href="javascript:;">SVM</a></dd>
-              <dd><a href="javascript:;">贝叶斯</a></dd>
+              <dd><a onclick="open_upload_window()">上传数据</a></dd>
+              <dd><a onclick="check_data_table()">查看数据</a></dd>
             </dl>
-        </li>
-      </ul>
+          </li>
+          <li class="layui-nav-item"><a href="">统计与可视化</a></li>
+          <li class="layui-nav-item"><a href="">训练与预测</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-  
-  <div class="layui-body">
-  <div>
-      <iframe src="./html/upload.html" width="100%" height="100%"></iframe>
-  </div>
-  
-</div>
-<script  src="static/layui/layui.js" ></script>
+    <iframe id="content"></iframe>
+</body>
+<script  src="/static/layui/layui.js" ></script>
 <script>
-//JavaScript代码区域
-layui.use('element', function(){
-  var element = layui.element;
-  
-});
+  layui.use('element', function(){
+    var element = layui.element;
+  });
+  reSetSize();
+  window.onresize = reSetSize;
+  function reSetSize() {
+    //iframe 的大小
+    var windowsHeight = window.innerHeight
+    var windowsWidth = window.innerWidth
+    iframe = document.getElementById("content")
+    iframe.style.height = (windowsHeight-10) + "px";
+    iframe.style.width = (windowsWidth-10) + "px";
+  }
+  function open_upload_window(){
+    //居中打开上传数据窗口
+    var height = 300
+    var width = 500
+    var top = (window.screen.height-30-height)/2
+    var left = (window.screen.width-10-width)/2
+    features =  "height="+height+
+                ",width="+width+
+                ",top="+top+
+                ",left="+left+
+                "toolbar=no, menubar=no, scrollbars=no, \
+                resizable=no, location=no, status=no"
+    window.open("/html/upload.html","上传数据",features)
+  }
+  function check_data_table(){
+    var iframe = document.getElementById("content")
+    iframe.src = "/html/data.html"
+  }
 </script>
 </body>
 </html>

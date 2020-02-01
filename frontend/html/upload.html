@@ -7,79 +7,51 @@
   <link rel="stylesheet" href="../static/layui/css/layui.css" >
   <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css">
 </head>
-<body>
+<body  class="layui-layout-body">
     <center>
-    <br>
-    <!-- <form id="uploadForm" enctype="multipart/form-data" >
-        <div>
-            <input type="file" name="file" value="" style="color: white">
-            <input type="button" value="上传" id="upFileBtn">
-        </div>
-    </form> -->
-    <form id="upload_form" enctype="multipart/form-data">
-        <label onclick="file_click('data_all')" class="btn btn-default">选择用户相关数据</label>
-        <input type="file" name="data_all" id="data_all" style="display: none;" />
-        
-        <label onclick="file_click('data_label')"  class="btn btn-default">选择被投诉用户数据</label>
-        <input type="file" name="data_label" id="data_label" style="display: none;" />
-        <br><br>
-        <label class="btn btn-default">名称</label>
-        <input type="text" name="collection">
-
         <br>
-        <label for="upload"  class="btn btn-default" onclick="upload()">上传</label>
-    </form>
-  
+        <form id="upload_form" enctype="multipart/form-data">
+            <label onclick="file_click('data_all')" class="btn btn-default">选择用户相关数据</label>
+            <input type="file" name="data_all" id="data_all" style="display: none;" />
+            
+            <label onclick="file_click('data_label')"  class="btn btn-default">选择被投诉用户数据</label>
+            <input type="file" name="data_label" id="data_label" style="display: none;" />
+            <br><br>
+            <label class="btn btn-default">名称</label>
+            <input type="text" name="collection" id="collection" required="required">
     
-        
-        <!-- <label for="upload—_all"  class="btn btn-default">上传用户相关数据</label>
-        <input type="file" id="upload" style="display: none;" /> -->
-
-        <!-- <button class="layui-btn demoMore" lay-data="{url: '/c/', accept: 'file'}">上传C</button>
-        <div class="layui-upload-drag" id="raw_all">
-            <i class="layui-icon"></i>
-            <p>点击上传用户相关数据，或将文件拖拽到此处</p>
-        </div>
-
-        <div class="layui-upload-drag" id="raw_label">
-            <i class="layui-icon"></i>
-            <p>点击上传被投诉用户数据，或将文件拖拽到此处</p>
-        </div> -->
+            <br>
+            <label for="upload"  class="btn btn-default" onclick="upload()">上传</label>
+        </form>
     </center>
-    <!-- <center>
-        <div class="layui-upload-drag" id="clean_data">
-            <i class="layui-icon"></i>
-            <p>点击上传清理后的数据，或将文件拖拽到此处</p>
-        </div>        
-    </center> -->
-    
-    <script src="../static/jquery/jquery.min.js"></script>
-    <script src="../static/layui/layui.js" charset="utf-8"></script>
+<script src="../static/jquery/jquery.min.js"></script>
+<script src="../static/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use('element', function(){
+    var element = layui.element;
+    });
+    function upload(){
+        window.alert('upload')
+    }
+</script>
     <script>
         function file_click(id) {
             input = document.getElementById(id)
             input.click()
-            
-            // span = document.createElement("span")
-            // span.innerText = input.files;
-            // input.insertAdjacentElement("afterend",span)
-            
         }
         function upload() {
+            //上传文件
             var data_all = document.getElementById("data_all").files
             var data_label = document.getElementById("data_label").files
-            // console.log(data_label)
-            if (data_all.length== 0 || data_label.length == 0){
-                
+            var collection = document.getElementById("collection").value
+            if (data_all.length== 0 || data_label.length == 0 || collection==""){
                 layui.use('layer', function(){
                 var layer = layui.layer;
-                layer.msg('请上传所有文件');
+                layer.msg('请上传所有文件,并填写名称');
                 return ;
                 });
             }else{
                 var formData = new FormData($('#upload_form')[0]);
-                // var formData = {features:data_all,label:data_label}
-                // console.log(formData)
                 $.ajax({
                     url:'http://localhost:5000/wash-data/api/v1.0/data',
                     type:'post',
@@ -89,49 +61,16 @@
                     contentType: false,
                     success:function(res){
                         window.alert(JSON.stringify(res['msg']))
-                        // console.table(res)
-                        // layui.use('layer', function(){
-                        // var layer = layui.layer;
-                        // layer.msg('上传成功');
-                        // return ;
-                        // });
-                    }
+                        window.close()
+                    },
+                    error:function(){
+                        window.alert(JSON.stringify(res['msg']))
+                        window.close()
+                    },
                 })
             }
             
         }
-
-            layui.use('upload', function(){
-              var $ = layui.jquery
-              ,upload = layui.upload;
-              upload.render({
-                elem: '#raw_all'
-                ,url: '/upload/'
-                ,accept: 'file'
-                ,done: function(res){
-                console.log(res)
-                }
-                });
-
-                upload.render({
-                elem: '#raw_label'
-                ,url: '/upload/'
-                ,accept: 'file'
-                ,done: function(res){
-                console.log(res)
-                }
-                });
-
-                upload.render({
-                elem: '#clean_data'
-                ,method:'post'
-                ,url: 'http://www.phoneprobe.com:5000/predict'
-                ,accept: 'image'
-                ,done: function(res){
-                    window.alert(JSON.stringify(res["class_name"]))
-                }
-                });
-            });
     </script>            
 </body>
 </html>

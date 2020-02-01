@@ -1,6 +1,6 @@
-import pymongo,json,time
+import pymongo,json,time,os
 from  api.logger import log
-import os
+from pandas import DataFrame
 def _connect_mongo(host, port, username=None, password=None,db='phone-number-prober'):
     """ A util for making a connection to mongo """
     if username and password:
@@ -13,23 +13,27 @@ def _connect_mongo(host, port, username=None, password=None,db='phone-number-pro
 # db = client['phone-number-prober']
 # print(collist)
 def save_file(collection,user_data):
-
-    doc = open("april.json","w+")
-    doc.write(user_data)
     start = time.time()
     db = _connect_mongo(host='localhost',port=27017)
 
-    collist = db. list_collection_names()
+    collist = db.list_collection_names()
     if collection in collist:
-        return {'result':False,'msg':'名称已存在'}
+        return {'result':500,'msg':'上传失败名称已存在'}
     db[collection].insert_many(json.loads(user_data))
     end = time.time()
     log("上传文件到数据库成功，花费时间："+str(end-start))
-    return {'result':True,'msg':'上传成功'}
-    
+    return {'result':200,'msg':'上传成功'}
 
-def main():
-    save_file()
+def load_data(collection):
+    db = _connect_mongo(host='localhost',port=27017)
+    user_data = DataFrame(list(db[collection].find()))
+    return user_data
 
-if __name__ == "__main__":
-    main()
+def get_collection_names():
+    db = _connect_mongo(host='localhost',port=27017)
+    collections = db.list_collection_names()
+    results = []
+    for collection in collections:
+        result = {collection:db[collection].find().count()}
+        results.append(result)
+    return results
