@@ -1,13 +1,7 @@
 import pandas as pd
-import numpy as np
 import re,api
-from flask import jsonify, request,Blueprint
-from flask_cors import cross_origin
-from statistic.describe import describe
-from etl.database import save_file,get_collection_names
 
 from time import time
-washer = Blueprint('washer', __name__,url_prefix='/wash-data')
 
 def _z_score(clean_data):
     #z-score规范化
@@ -48,42 +42,6 @@ def wash_data(user_data):
     return user_data
 
 
-@washer.route('/api/v1.0/data',methods=['POST'])
-@cross_origin()
-def post_data():
-    if request.method == 'POST':
-        user_data = pd.read_csv(request.files["data_all"],encoding='utf-8')
-        complain_users = pd.read_csv(request.files["data_label"],encoding='utf-8')["user_id"]
-        collection = request.values['collection']
-        all_users_id = user_data["user_id"]
-        labels = all_users_id.isin(complain_users).astype("int")
-
-        user_data["label"] = labels
-        clean_data = wash_data(user_data)
-        try:
-            res = save_file(collection,clean_data.to_json(orient='records'))
-        except:
-            res = {'result':500,'msg':'上传失败，未知错误'}
-        finally:
-            return res
-        # save_file(collection,user_data)
-        
-        # clean_data = wash_data(user_data)
-        
-        # descriptions = describe(clean_data)
-        # return jsonify(descriptions)
-
-@washer.route('/api/v1.0/data/',methods=['GET'])
-@cross_origin()
-def get_data_list():
-    try:
-        collection_names = get_collection_names()
-        res = {'result':200,'data':collection_names}
-    except BaseException as e:
-        print('exception:',e)
-        res = {'result':500,'data':None}
-    finally:
-       return res
 # def get_data(collection):
 #     try:
 #         user_data = load_data(collection)

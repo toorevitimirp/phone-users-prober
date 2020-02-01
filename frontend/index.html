@@ -17,7 +17,7 @@
             <a href="javascript:;">数据中心</a>
             <dl class="layui-nav-child">
               <dd><a onclick="open_upload_window()">上传数据</a></dd>
-              <dd><a onclick="check_data_table()">查看数据</a></dd>
+              <dd><a onclick="check_data_table()">数据信息</a></dd>
             </dl>
           </li>
           <li class="layui-nav-item"><a href="">统计与可视化</a></li>
@@ -25,7 +25,7 @@
         </ul>
       </div>
     </div>
-    <iframe id="content"></iframe>
+    <iframe id="content" src='/html/main.html'></iframe>
 </body>
 <script  src="/static/layui/layui.js" ></script>
 <script>
@@ -58,7 +58,7 @@
   }
   function check_data_table(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/data.html"
+    iframe.src = "/html/data-info.html"
   }
 </script>
 </body>

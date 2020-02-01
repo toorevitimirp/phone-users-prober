@@ -11,10 +11,10 @@
     <center>
         <br>
         <form id="upload_form" enctype="multipart/form-data">
-            <label onclick="file_click('data_all')" class="btn btn-default">选择用户相关数据</label>
+            <label id="data_all_name" onclick="file_click('data_all')" class="btn btn-default">选择用户相关数据</label>
             <input type="file" name="data_all" id="data_all" style="display: none;" />
             
-            <label onclick="file_click('data_label')"  class="btn btn-default">选择被投诉用户数据</label>
+            <label id="data_all_label_name" onclick="file_click('data_label')"  class="btn btn-default">选择被投诉用户数据</label>
             <input type="file" name="data_label" id="data_label" style="display: none;" />
             <br><br>
             <label class="btn btn-default">名称</label>
@@ -25,6 +25,8 @@
         </form>
     </center>
 <script src="../static/jquery/jquery.min.js"></script>
+<!-- 
+<script src="../static/layui/lay/modules/layer.js"></script> -->
 <script src="../static/layui/layui.js" charset="utf-8"></script>
 <script>
     layui.use('element', function(){
@@ -37,6 +39,7 @@
     <script>
         function file_click(id) {
             input = document.getElementById(id)
+            id_label = document.getElementById(id+"_name")
             input.click()
         }
         function upload() {
@@ -46,30 +49,57 @@
             var collection = document.getElementById("collection").value
             if (data_all.length== 0 || data_label.length == 0 || collection==""){
                 layui.use('layer', function(){
-                var layer = layui.layer;
-                layer.msg('请上传所有文件,并填写名称');
-                return ;
+                    var layer = layui.layer;
+                    layer.open({
+                        title: '错误',
+                        content: '请上传所有文件,并填写名称' //这里content是一个普通的String
+                    });
                 });
             }else{
-                var formData = new FormData($('#upload_form')[0]);
-                $.ajax({
-                    url:'http://localhost:5000/wash-data/api/v1.0/data',
-                    type:'post',
-                    data: formData,
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    success:function(res){
-                        window.alert(JSON.stringify(res['msg']))
-                        window.close()
-                    },
-                    error:function(){
-                        window.alert(JSON.stringify(res['msg']))
-                        window.close()
-                    },
-                })
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                    content: "用户信息文件:"+data_all[0].name+",\n被投诉用户文件:"+data_label[0].name+",\n是否上传?"
+                    ,btn: ['确定',]
+                    ,yes: function(index, layero){
+                        var formData = new FormData($('#upload_form')[0]);
+                        $.ajax({
+                            url:'http://localhost:5000/data-center/api/v1.0/data',
+                            type:'post',
+                            data: formData,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success:function(res){
+                                var res = JSON.stringify(res['msg'])
+                                alert(res)
+                                close()
+                                // console.log(res)
+                                
+                                // layui.use('layer', function(res){
+                                //     var layer = layui.layer;
+                                //     layer.msg(JSON.stringify(res['msg']))
+                                // });
+                            
+                            },
+                            error:function(){
+                                // var res = JSON.stringify(res['msg'])
+                                alert("上传失败，未知错误")
+                                close()
+                                // layui.use('layer', function(res){
+                                //     var layer = layui.layer;
+                                //     layer.msg(JSON.stringify(res['msg']))
+                                // });
+                            },
+                        })
+                        
+                    }
+                    ,cancel: function(){ 
+                        
+                    }
+                    });
+                });
             }
-            
         }
     </script>            
 </body>

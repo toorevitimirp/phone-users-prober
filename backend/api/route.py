@@ -1,3 +1,4 @@
 from api.app import app
-from etl.washer import washer
-app.register_blueprint(washer)
+from etl.data_center import data_center
+
+app.register_blueprint(data_center)
