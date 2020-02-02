@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>手机用户分析系统</title>
-  <link rel="stylesheet" href="../static/layui/css/layui.css" >
-  <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/layui/css/layui.css" >
+  <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
 </head>
 <body  class="layui-layout-body">
     <center>
@@ -17,17 +17,20 @@
             <label id="data_all_label_name" onclick="file_click('data_label')"  class="btn btn-default">选择被投诉用户数据</label>
             <input type="file" name="data_label" id="data_label" style="display: none;" />
             <br><br>
+            <!-- <label id="warn" class="layui-bg-red">正在上传文件，请勿关闭窗口...</label> -->
+            <br><br>
             <label class="btn btn-default">名称</label>
             <input type="text" name="collection" id="collection" required="required">
     
-            <br>
+            <br><br><br><br>
             <label for="upload"  class="btn btn-default" onclick="upload()">上传</label>
+            
         </form>
     </center>
-<script src="../static/jquery/jquery.min.js"></script>
+<script src="/static/jquery/jquery.min.js"></script>
 <!-- 
 <script src="../static/layui/lay/modules/layer.js"></script> -->
-<script src="../static/layui/layui.js" charset="utf-8"></script>
+<script src="/static/layui/layui.js" charset="utf-8"></script>
 <script>
     layui.use('element', function(){
     var element = layui.element;
@@ -58,45 +61,40 @@
             }else{
                 layui.use('layer', function(){
                     var layer = layui.layer;
-                    layer.open({
-                    content: "用户信息文件:"+data_all[0].name+",\n被投诉用户文件:"+data_label[0].name+",\n是否上传?"
-                    ,btn: ['确定',]
-                    ,yes: function(index, layero){
-                        var formData = new FormData($('#upload_form')[0]);
-                        $.ajax({
-                            url:'http://localhost:5000/data-center/api/v1.0/data',
-                            type:'post',
-                            data: formData,
-                            cache: false,
-                            processData: false,
-                            contentType: false,
-                            success:function(res){
-                                var res = JSON.stringify(res['msg'])
-                                alert(res)
-                                close()
-                                // console.log(res)
+                    layer.confirm("用户信息文件:"+data_all[0].name+",\n被投诉用户文件:"+data_label[0].name+",\n是否上传?",
+                        function(index){
+                            layer.close(index);
+                            layer.msg("正在上传文件，返回前请勿关闭窗口...")
+                            var formData = new FormData($('#upload_form')[0]);
+                            $.ajax({
+                                url:'http://localhost:5000/data-center/api/v1.0/data',
+                                type:'post',
+                                data: formData,
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                success:function(res){
+                                    var res = JSON.stringify(res['msg'])
+                                    alert(res)
+                                    
+                                    // console.log(res)
+                                    
+                                    // layui.use('layer', function(res){
+                                    //     var layer = layui.layer;
+                                    //     layer.msg(JSON.stringify(res['msg']))
+                                    // });
                                 
-                                // layui.use('layer', function(res){
-                                //     var layer = layui.layer;
-                                //     layer.msg(JSON.stringify(res['msg']))
-                                // });
-                            
-                            },
-                            error:function(){
-                                // var res = JSON.stringify(res['msg'])
-                                alert("上传失败，未知错误")
-                                close()
-                                // layui.use('layer', function(res){
-                                //     var layer = layui.layer;
-                                //     layer.msg(JSON.stringify(res['msg']))
-                                // });
-                            },
-                        })
+                                },
+                                error:function(){
+                                    // var res = JSON.stringify(res['msg'])
+                                    alert("上传失败，未知错误")
+                                    // layui.use('layer', function(res){
+                                    //     var layer = layui.layer;
+                                    //     layer.msg(JSON.stringify(res['msg']))
+                                    // });
+                                },
+                            })
                         
-                    }
-                    ,cancel: function(){ 
-                        
-                    }
                     });
                 });
             }

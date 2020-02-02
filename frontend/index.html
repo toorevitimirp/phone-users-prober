@@ -43,20 +43,21 @@
     iframe.style.width = (windowsWidth-10) + "px";
   }
   function open_upload_window(){
+
     //居中打开上传数据窗口
-    var height = 300
-    var width = 500
+    var width = 600
+    var height = width * 0.618
     var top = (window.screen.height-30-height)/2
     var left = (window.screen.width-10-width)/2
     features =  "height="+height+
                 ",width="+width+
                 ",top="+top+
                 ",left="+left
-    window.open("/html/upload.html","上传数据",features)
+    window.open("/html/data-center/upload.html","上传数据",features)
   }
   function check_data_table(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/data-info.html"
+    iframe.src = "/html/data-center/data-info.html"
   }
 </script>
 </body>
