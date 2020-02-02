@@ -1,46 +1,48 @@
-import pandas as pd
-import re,api
-
+import api
+import re
 from time import time
 
+
 def _z_score(clean_data):
-    #z-score规范化
+    # z-score规范化
     pass
 
 
 def _max_min(clean_data):
-    #max-min规范化
+    # max-min规范化
     pass
 
+
 def _is_number(num):
-  pattern = re.compile(r'^[-+]?[-0-9]\d*\.\d*|[-+]?\.?[0-9]\d*$')
-  result = pattern.match(str(num))
-  if result:
-    return True
-  else:
-    return False 
+    pattern = re.compile(r'^[-+]?[-0-9]\d*\.\d*|[-+]?\.?[0-9]\d*$')
+    result = pattern.match(str(num))
+    if result:
+        return True
+    else:
+        return False
+
+
 def wash_data(user_data):
-    #剔除含有非数值型数据的行
+    # 剔除含有非数值型数据的行
     start = time()
     user_data.dropna(inplace=True)
     # del_series=user_data.applymap(_is_number).all(1)
     # del_list = [i for i, x in enumerate(del_series) if x == False]
     # user_data.drop(del_list,inplace=True)
 
-    del_list=[]
+    del_list = []
     for column in user_data.columns:
-        if user_data[column].dtype=="object":
+        if user_data[column].dtype == "object":
             i = 0
             for val in user_data[column]:
-                if not str(val).replace(".","").isdigit():
+                if not str(val).replace(".", "").isdigit():
                     del_list.append(i)
                 i += 1
-    user_data.drop(del_list,inplace=True)
+    user_data.drop(del_list, inplace=True)
     end = time()
-    api.logger.log("去掉的行数: "+str(len(del_list)))
-    api.logger.log("清洗数据所用时间：" + str(end-start))
+    api.logger.log("去掉的行数: " + str(len(del_list)))
+    api.logger.log("清洗数据所用时间：" + str(end - start))
     return user_data
-
 
 # def get_data(collection):
 #     try:

@@ -20,7 +20,7 @@
               <dd><a onclick="check_data_table()">数据信息</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item"><a href="">统计与可视化</a></li>
+          <li class="layui-nav-item"><a onclick="statistic_visual()">统计与可视化</a></li>
           <li class="layui-nav-item"><a href="">训练与预测</a></li>
         </ul>
       </div>
@@ -58,6 +58,11 @@
   function check_data_table(){
     var iframe = document.getElementById("content")
     iframe.src = "/html/data-center/data-info.html"
+  }
+
+  function statistic_visual(){
+    var iframe = document.getElementById("content")
+    iframe.src = "/html/statistic-visual/main.html"
   }
 </script>
 </body>

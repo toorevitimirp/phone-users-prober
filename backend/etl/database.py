@@ -1,6 +1,9 @@
-import pymongo, json, time, os
-from api.logger import log
+import json
+import pymongo
+import time
 from pandas import DataFrame
+
+from api.logger import log
 
 data_info = "data-info"  # 储存集合元数据
 
@@ -21,7 +24,7 @@ def save_file(collection, user_data, length):
 
     collist = db.list_collection_names()
     if collection in collist:
-        return {'result': 500, 'msg': '上传失败名称已存在'}
+        return {'result': 500, 'msg': '上传失败,名称已存在'}
 
     # try:
     #     db[collection].insert_many(json.loads(user_data))

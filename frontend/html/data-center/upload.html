@@ -75,6 +75,8 @@
                                 contentType: false,
                                 success:function(res){
                                     var res = JSON.stringify(res['msg'])
+                                    var iframe = window.parent.opener.document
+                                    console.log(iframe)
                                     alert(res)
                                     
                                     // console.log(res)
