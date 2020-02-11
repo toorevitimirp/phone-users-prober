@@ -18,8 +18,9 @@ def _connect_mongo(host, port, username=None, password=None, db='phone-number-pr
     return conn[db]
 
 
-def save_file(collection, user_data, length):
+def save_data(collection, user_data, columns, length):
     start = time.time()
+    print(type(user_data))
     db = _connect_mongo(host='localhost', port=27017)
 
     collist = db.list_collection_names()
@@ -41,7 +42,7 @@ def save_file(collection, user_data, length):
         return res
     else:
         try:
-            info = {'name': collection, 'length': length, 'trained': 0}
+            info = {'name': collection, 'length': length, 'columns': columns, 'trained': 0}
             db[data_info].insert_one(info)
         except BaseException as e:
             log("exception" + str(e))

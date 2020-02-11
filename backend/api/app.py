@@ -13,8 +13,22 @@ import api.error
 
 
 @app.route('/test', methods=['GET'])
+@cross_origin()
 def test():
-    return str(app.url_map)
+    data = [{
+        "id": 1,
+        "name": "xx",
+        "sex": "male",
+        "pid": -1
+        },
+        {
+        "id": 2,
+        "name": "xx",
+        "sex": "male",
+        "pid": 1
+        }
+        ]
+    return str(data)
 
 
 if __name__ == '__main__':

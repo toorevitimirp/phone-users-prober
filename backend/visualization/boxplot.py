@@ -1,7 +1,5 @@
 from flask_cors import cross_origin
-from flask import Blueprint
-
-visual = Blueprint('visual', __name__, url_prefix='/visual/api/v1.0')
+from visualization import visual
 
 
 @visual.route('/boxplot', methods=['GET'])

@@ -4,117 +4,101 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>手机用户分析系统</title>
+  <link rel="stylesheet" href="/static/layui/css/layui.css" >
+  <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
 </head>
-<body style="height: 100%; margin: 0">
-    <div id="container"></div>
+<body  class="layui-layout-body">
+    <center>
+        <table  id="table" lay-filter="filter"></table>
+        <div id="container" style="height: 100%"></div>
+        <table class="layui-table" lay-data="{基础参数}">
+                <thead>
+                  <tr>
+                    <th lay-data="{field:'username', width:80}" rowspan="2">联系人</th>
+                    <th lay-data="{field:'amount', width:120}" rowspan="2">金额</th>
+                    <th lay-data="{align:'center'}" colspan="3">地址</th>
+                  </tr>
+                  <tr>
+                    <th lay-data="{field:'province', width:80}">省</th>
+                    <th lay-data="{field:'city', width:120}">市</th>
+                    <th lay-data="{field:'county', width:300}">详细</th>
+                  </tr>
+                </thead>
+              </table>
+    </center>
 </body>
+<script src="/static/jquery/jquery.min.js"></script>
+<script src="/static/layui/layui.js"></script>
 <script src="/static/echarts/echarts.min.js"></script>
 <script src="/static/echarts/dataTool.min.js"></script>
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-xs" lay-event="statistic">统计特征</a>
+    <a class="layui-btn layui-btn-xs" lay-event="boxplot">盒图</a>
+</script>
+<script>
+    // function del(ele){
+    //     var div = ele.parentNode.parentNode
+    //     var td = div.previousElementSibling.previousElementSibling.previousElementSibling
+    //     console.log(td)
+    // }
+    // layui.use('table', function(){
+    //     var table = layui.table;
+    //     var height = window.innerHeight -100
 
-<script type="text/javascript">
-    plotBox()
-    function getName(){
-        var args = window.location.search 
-        var afterUrl =  args.substring(1);
-        var name = afterUrl.substring(afterUrl.indexOf('=')+1);
-        name = decodeURI(name) //防止乱码
-        return name;
-    }
-    function plotBox(){
-        var dom = document.getElementById("container");
-        var height = window.innerHeight-30
-        var width = window.innerWeight-30
-        dom.style="width:"+width+"px;"+"height:"+height+"px"
-        var myChart = echarts.init(dom);
-        window.onresize = myChart.resize;
-        var app = {};
-        option = null;
-        var data = echarts.dataTool.prepareBoxplotData([
-            [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
-            [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
-            [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
-            [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-            [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
-        ]);
+    //     table.render({
+    //         elem: '#table'
+    //         ,height: height
+    //         ,url: 'http://localhost:5000/data-center/api/v1.0/data/info' //数据接口
+    //         ,page: true //开启分页
+    //         ,parseData: function(res){ //res 即为原始返回的数据
+    //             return {
+    //             "code": res.result, //解析接口状态
+    //             "msg": "", //解析提示文本
+    //             "count": NaN, //解析数据长度
+    //             "data": res.data //解析数据列表
+    //             };
+    //         }
+    //         ,cols: [[ //表头
+    //         ,{field: 'id', title: '',}
+    //         ,{field: 'name', title: '数据集',}
+    //         ,{field: 'length', title: '数据长度',  sort: true}
+    //         ,{field: 'trained', title: '已训练', sort: true}
+    //         ,{fixed: 'right', title:'操作', align:'center', toolbar: '#toolbar'} 
+    //         ]]
+    //     });
+
+    //     table.on('tool(filter)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+    //         var data = obj.data; //获得当前行数据
+    //         var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+    //         var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            
+    //         if (layEvent==='boxplot'){
+                
+    //             var width = 800
+    //             var height = width * 0.618
+    //             var top = (window.screen.height-30-height)/2
+    //             var left = (window.screen.width-10-width)/2
+    //             features =  "height="+height+
+    //                         ",width="+width+
+    //                         ",top="+top+
+    //                         ",left="+left
+    //             url = "/html/statistic-visual/boxplot.html?name="+data.name
+    //             window.open(url,"盒图",features)
+                
+    //         }else if(layEvent==='statistic'){
+    //             var width = 800
+    //             var height = width * 0.618
+    //             var top = (window.screen.height-30-height)/2
+    //             var left = (window.screen.width-10-width)/2
+    //             features =  "height="+height+
+    //                         ",width="+width+
+    //                         ",top="+top+
+    //                         ",left="+left
+    //             url = "/html/statistic-visual/boxplot.html?name="+data.name
+    //             window.open(url,"盒图",features)
+    //         }
+    //     });
         
-        option = {
-            title: [
-                {
-                    text: getName(),
-                    left: 'center',
-                },
-                {
-                    text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
-                    borderColor: '#999',
-                    borderWidth: 1,
-                    textStyle: {
-                        fontSize: 14
-                    },
-                    left: '10%',
-                    top: '90%'
-                }
-            ],
-            tooltip: {
-                trigger: 'item',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            grid: {
-                left: '10%',
-                right: '10%',
-                bottom: '15%'
-            },
-            xAxis: {
-                type: 'category',
-                data: data.axisData,
-                boundaryGap: true,
-                nameGap: 30,
-                splitArea: {
-                    show: false
-                },
-                axisLabel: {
-                    formatter: 'expr {value}'
-                },
-                splitLine: {
-                    show: false
-                }
-            },
-            yAxis: {
-                type: 'value',
-                name: 'km/s minus 299,000',
-                splitArea: {
-                    show: true
-                }
-            },
-            series: [
-                {
-                    name: 'boxplot',
-                    type: 'boxplot',
-                    data: data.boxData,
-                    tooltip: {
-                        formatter: function (param) {
-                            return [
-                                'Experiment ' + param.name + ': ',
-                                'upper: ' + param.data[5],
-                                'Q3: ' + param.data[4],
-                                'median: ' + param.data[3],
-                                'Q1: ' + param.data[2],
-                                'lower: ' + param.data[1]
-                            ].join('<br/>');
-                        }
-                    }
-                },
-                {
-                    name: 'outlier',
-                    type: 'scatter',
-                    data: data.outliers
-                }
-            ]
-        };;
-        if (option && typeof option === "object") {
-            myChart.setOption(option, true);
-        }
-    }
+    // })
 </script>
 </html>

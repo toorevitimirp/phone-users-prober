@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from flask import Blueprint, request
 from flask_cors import cross_origin
-from etl.database import save_file, get_collection_info, del_data_by_collection_name
+from etl.database import save_data, get_collection_info, del_data_by_collection_name
 from etl.washer import wash_data
 
 data_center = Blueprint('data_center', __name__, url_prefix='/data-center/api/v1.0')
@@ -16,16 +16,21 @@ def post_data():
         if collection == 'data-info':
             return {'result': 500, 'msg': '上传失败，数据集合名称不能为data-info'}
 
+        # 将csv文件转换为标准的数据格式，保护features，label
         user_data = pd.read_csv(request.files["data_all"], encoding='utf-8')
         complain_users = pd.read_csv(request.files["data_label"], encoding='utf-8')["user_id"]
         all_users_id = user_data["user_id"]
         labels = all_users_id.isin(complain_users).astype("int")
-
         user_data["label"] = labels
+
+        # 清洗数据
         clean_data = wash_data(user_data)
+
+        # 保存数据到数据库
         try:
             length = clean_data.shape[0]
-            res = save_file(collection, clean_data.to_json(orient='records'), length)
+            columns = list(clean_data.columns)
+            res = save_data(collection, clean_data.to_json(orient='records'), columns, length)
         except BaseException as e:
             print("exception", e)
             res = {'result': 500, 'msg': '上传失败，未知错误'}

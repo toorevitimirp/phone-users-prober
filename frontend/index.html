@@ -20,7 +20,13 @@
               <dd><a onclick="check_data_table()">数据信息</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item"><a onclick="statistic_visual()">统计与可视化</a></li>
+          <li class="layui-nav-item">
+            <a href="javascript:;">统计与可视化</a>
+            <dl class="layui-nav-child">
+              <dd><a onclick="boxplot()">盒图</a></dd>
+              <!-- <dd><a onclick="check_data_table()">数据信息</a></dd> -->
+            </dl>
+          </li>
           <li class="layui-nav-item"><a href="">训练与预测</a></li>
         </ul>
       </div>
@@ -60,9 +66,9 @@
     iframe.src = "/html/data-center/data-info.html"
   }
 
-  function statistic_visual(){
+  function boxplot(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/statistic-visual/main.html"
+    iframe.src = "/html/statistic-visual/test.html"
   }
 </script>
 </body>
