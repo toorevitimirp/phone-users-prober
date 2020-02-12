@@ -28,5 +28,5 @@ def basic():
         data = []
         for col in raw.columns:
             print(col)
-        
+
         return {'result': 0, 'data': data}
