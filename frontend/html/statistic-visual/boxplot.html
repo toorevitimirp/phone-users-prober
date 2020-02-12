@@ -67,7 +67,9 @@
     render_form()
     function getData(){
         if(collection!='' && feature!=''){
-            return [[1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]]
+            return [            
+                [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
+            ]
         }
     }
     function plot_box(){
@@ -119,7 +121,7 @@
                         show: false
                     },
                     axisLabel: {
-                        formatter: 'expr {value}'
+                        formatter: feature
                     },
                     splitLine: {
                         show: false
@@ -127,10 +129,10 @@
                 },
                 yAxis: {
                     type: 'value',
-                    name: 'km/s minus 299,000',
                     splitArea: {
-                        show: true
-                    }
+                        show: true,
+                    },
+                    scale:true,
                 },
                 series: [
                     {
@@ -171,8 +173,8 @@
             contentType: false,
             success:function(res){
                 var res = JSON.stringify(res)
-                var raw = JSON.parse(res).data
-                data_all = JSON.parse(raw)
+                data_all = JSON.parse(res).data
+                // data_all = JSON.parse(raw)
                 
                 //数据集的select
                 for (let i = -1; i < data_all.length; i++) {
