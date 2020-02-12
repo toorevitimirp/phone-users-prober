@@ -20,7 +20,7 @@ def _connect_mongo(host, port, username=None, password=None, db='phone-number-pr
 
 def save_data(collection, user_data, columns, length):
     start = time.time()
-    print(type(user_data))
+    # print(type(user_data))
     db = _connect_mongo(host='localhost', port=27017)
 
     collist = db.list_collection_names()
@@ -57,9 +57,19 @@ def save_data(collection, user_data, columns, length):
 
 
 def load_data(collection):
+    # 返回一个文档的所有数据
     db = _connect_mongo(host='localhost', port=27017)
     user_data = DataFrame(list(db[collection].find()))
     return user_data
+
+
+def get_series_form_collection(collection, feature):
+    # 返回某个数据集的某一列
+    db = _connect_mongo(host='localhost', port=27017)
+    cursor = db[collection].find({}, {'_id': 0, feature: 1})
+    data = DataFrame(list(cursor))
+
+    return data
 
 
 def get_collection_info():
@@ -90,3 +100,4 @@ def del_data_by_collection_name(name):
             res = {'result': 500, 'msg': '删除数据失败'}
     finally:
         return res
+

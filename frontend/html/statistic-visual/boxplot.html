@@ -16,22 +16,15 @@
                 </select>
             </div>
         </div>      
-        <div class="layui-form-item ">
+        <div class="layui-form-item">
                 <label class="layui-form-label">特征</label>
                 <div class="layui-input-block">
                         <select id="features" class="form-control input-sm" lay-filter="feature" aria-invalid="false">
                             <option></option>
-                            <option value="0">user_id</option>
-                            <option value="1">users_3w</option>
-                            <option value="2">twolow_users</option>
-                            <option value="3">roam_users02</option>
                             <option value="4">roam_call_duration</option>
-                            <option value="5">roam_users01</option>
                             <option value="6">roam_duration_02</option>
                             <option value="7">mon_use_days</option>
                             <option value="8">is_p_app_wx_times</option>
-                            <option value="9">vv_type</option>
-                            <option value="10">in16_roam_tag</option>
                             <option value="11">zhujiao_time</option>
                             <option value="12">zhujiao_times</option>
                             <option value="13">mb5</option>
@@ -49,12 +42,14 @@
                             <option value="25">close</option>
                             <option value="26">open_day</option>
                             <option value="27">cell_num</option>
-                            <option value="28">label</option>
                         </select>
                 </div>
         </div>
      </form>
-     <button class="btn btn-default  layui-col-md-offset1" onclick="plot_box()">确定</button>
+     <button class="btn btn-default  layui-col-md-offset1" onclick="get_data()">确定</button>
+     <!-- <button class="btn btn-default  layui-col-md-offset1" onclick="get_data()">test</button> -->
+
+     
      <div id="container"></div>
 </body>
 <script  src="/static/layui/layui.js" ></script>
@@ -65,15 +60,38 @@
     collection = ''
     feature = ''
     render_form()
-    function getData(){
-        if(collection!='' && feature!=''){
-            return [            
-                [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-            ]
+    function get_data(){
+        feature = $('#features option:selected').text();
+        var confirm = "数据集："+collection+"特征:"+feature+"?"
+        layer.confirm(confirm, function(index){
+            layer.close(index);
+            if(collection!='' && feature!=''){
+            var formData = JSON.stringify({'collection':collection,'feature':feature})
+                $.ajax({
+                    url:'http://localhost:5000/visual/api/v1.0/boxplot',
+                    type:'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success:function(res){
+                        var msg = JSON.stringify(res['msg'])
+                        alert(msg)
+                        data = []
+                        data.push(res['data'])
+                        // data=[[1,2,3,4,5]]
+                        plot_box(data)           
+                    },
+                    error:function(){
+                        alert("上传失败，未知错误")
+                    },
+            })
         }
+        });
     }
-    function plot_box(){
+    function plot_box(data){
         if(collection!='' && feature!=''){
+            console.log(data)
             var dom = document.getElementById("container");
             var height = window.innerHeight-100
             var width = window.innerWeight-30
@@ -82,8 +100,7 @@
             window.onresize = myChart.resize;
             var app = {};
             option = null;
-            var data = echarts.dataTool.prepareBoxplotData(getData());
-            
+            var data = echarts.dataTool.prepareBoxplotData(data);
             option = {
                 title: [
                     {
@@ -194,6 +211,7 @@
                         var name = data.elem[data.elem.selectedIndex].text;
                         var columns = data_all[index].columns
                         collection = name
+
                         // console.log(collection)
                         // var childs = features.childNodes;
                         // for(var i = childs.length - 1; i >= 1; i--) {
@@ -210,13 +228,13 @@
                         //     features.appendChild(option)
                         // }
                          //无法根据选择的数据集渲染特征选择框，只能写静态html
-                        layui.use('form',function(data){
-                            var form = layui.form
-                            form.on('select(feature)',function(data){
-                                feature= data.elem[data.elem.selectedIndex].text;
-                             // console.log(feature)
-                            })
-                        })
+                        // layui.use('form',function(data){
+                        //     var form = layui.form
+                        //     form.on('select(feature)',function(data){
+                        //         feature= data.elem[data.elem.selectedIndex].text;
+                        //      // console.log(feature)
+                        //     })
+                        // })
                     });
                 })
                        
