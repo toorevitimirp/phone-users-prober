@@ -5,7 +5,7 @@ from flask_cors import cross_origin
 from visualization import visual
 from etl.database import get_series_form_collection
 from pandas import DataFrame
-
+from etl.washer import z_score
 
 @visual.route('/boxplot', methods=['POST'])
 @cross_origin()
@@ -17,7 +17,8 @@ def box_plot():
         feature = json_data['feature']
 
         raw = get_series_form_collection(collection, feature)
-        desc = raw.describe()[feature]
+        data_norm = z_score(raw)
+        desc = data_norm.describe()[feature]
         print(desc)
         data = []
         try:

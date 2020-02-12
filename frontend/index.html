@@ -24,6 +24,7 @@
             <a href="javascript:;">统计与可视化</a>
             <dl class="layui-nav-child">
               <dd><a onclick="boxplot()">盒图</a></dd>
+              <dd><a onclick="basic()">基本统计信息</a></dd>
               <!-- <dd><a onclick="check_data_table()">数据信息</a></dd> -->
             </dl>
           </li>
@@ -68,7 +69,12 @@
 
   function boxplot(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/statistic-visual/boxplot.html"
+    iframe.src = "/html/visualization/boxplot.html"
+  }
+
+  function basic(){
+    var iframe = document.getElementById("content")
+    iframe.src = "/html/statistic/basic.html"
   }
 </script>
 </body>

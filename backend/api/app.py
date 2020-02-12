@@ -15,20 +15,45 @@ import api.error
 @app.route('/test', methods=['GET'])
 @cross_origin()
 def test():
-    data = [{
-        "id": 1,
-        "name": "xx",
-        "sex": "male",
-        "pid": -1
+    maps = {
+        'feature': '特征',
+        'min': '最小值',
+        'max': '最大值',
+        'max-min': '最小值和最大值的差',
+        'var': '方差',
+        'std': '标准差',
+        'mean': '平均值',
+        'media': '中位数'
+    }
+    data = [
+        {
+            'feature': 'roam_call_duration',
+            'min': 0,
+            'max': 100,
+            'max-min': 100,
+            'var': 98,
+            'std': 72,
+            'mean': 59,
+            'media': 56
         },
         {
-        "id": 2,
-        "name": "xx",
-        "sex": "male",
-        "pid": 1
+            'feature': 'mon_use_days',
+            'min': 0,
+            'max': 100,
+            'max-min': 100,
+            'var': 98,
+            'std': 72,
+            'mean': 59,
+            'media': 56
         }
-        ]
-    return str(data)
+    ]
+    return {'result': 0, 'data': data}
+
+
+@app.route('/maps', methods=['GET'])
+@cross_origin()
+def all_maps():
+    return str(app.url_map)
 
 
 if __name__ == '__main__':

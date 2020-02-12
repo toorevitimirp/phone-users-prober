@@ -1,14 +1,16 @@
 import api
 import re
+from pandas import DataFrame
 from time import time
 
 
-def _z_score(clean_data):
+def z_score(data):
     # z-score规范化
-    pass
+    data = (data - data.mean())/data.std()
+    return data
 
 
-def _max_min(clean_data):
+def max_min(clean_data):
     # max-min规范化
     pass
 
