@@ -14,8 +14,7 @@
 <script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/layui/layui.js"></script>
 <script type="text/html" id="toolbar">
-    <a class="layui-btn layui-btn-xs" lay-event="statistic">统计特征</a>
-    <a class="layui-btn layui-btn-xs" lay-event="boxplot">盒图</a>
+    <a class="layui-btn layui-btn-xs" lay-event="boxplot">查看</a>
 </script>
 <script>
    
@@ -33,7 +32,7 @@
     var table = layui.table;
     var data = [{
       "id": 1,
-      "name": "xx",
+      "name": "",
       "sex": "male",
       "pid": -1
     },{
@@ -55,12 +54,13 @@
         // url: 'json/data1.json',
         data:data,
         cols: [[
-            {type: 'numbers'},
+            // {type: 'numbers'},
             // {field: 'id', title: 'id'},
-            {field: 'name', title: 'name'},
-            {field: 'sex', title: 'sex'},
+            {field: 'name', title: '名称'},
+            {field: 'sex', title: '长度'},
+            {field: 'trained', title: '是否训练'},
             // {field: 'pid', title: 'pid'},
-            {fixed: 'right', title:'操作', toolbar: '#toolbar'} 
+            {field: 'operate',fixed: 'right', title:'操作', toolbar: '#toolbar'} 
         ]]
     });
     table.on('tool(table1)', function(obj) { //注：test是table原始容器的属性 lay-filter="对应的值"
@@ -68,9 +68,6 @@
         var layEvent = obj.event;
 		selected = data;
 		//选中行样式
-		obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
-		//选中radio样式
-        obj.tr.find('i[class="layui-anim layui-icon"]').trigger("click");
         if (layEvent==='boxplot'){
                 window.alert('fuck')
                 console.log(data)

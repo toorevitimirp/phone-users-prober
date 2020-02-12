@@ -4,6 +4,7 @@ from flask import Blueprint, request
 from flask_cors import cross_origin
 from etl.database import save_data, get_collection_info, del_data_by_collection_name
 from etl.washer import wash_data
+from bson import json_util
 
 data_center = Blueprint('data_center', __name__, url_prefix='/data-center/api/v1.0')
 
@@ -49,7 +50,7 @@ def post_data():
 def get_data_info():
     try:
         collection_info = get_collection_info()
-        res = {'result': 0, 'data': collection_info}
+        res = {'result': 0, 'data': json_util.dumps(collection_info)}
     except BaseException as e:
         print('exception:', e)
         res = {'result': 500, 'data': None}

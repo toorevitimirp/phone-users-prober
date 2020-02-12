@@ -64,7 +64,7 @@ def load_data(collection):
 
 def get_collection_info():
     db = _connect_mongo(host='localhost', port=27017)
-    res = list(db[data_info].find({}, {"_id": 0, }))
+    res = list(db[data_info].find({}))
     return res
 
 

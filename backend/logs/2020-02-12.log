@@ -1,0 +1,6 @@
+2020-02-12 09:57:21,852 INFO: 去掉的行数: 455 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
+2020-02-12 09:57:21,852 INFO: 清洗数据所用时间：0.9463703632354736 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
+2020-02-12 09:57:21,852 INFO: 清洗数据所用时间：0.9463703632354736 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
+2020-02-12 09:57:33,730 INFO: 上传文件到数据库成功，花费时间：10.84789228439331 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
+2020-02-12 09:57:33,730 INFO: 上传文件到数据库成功，花费时间：10.84789228439331 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
+2020-02-12 09:57:33,730 INFO: 上传文件到数据库成功，花费时间：10.84789228439331 [in /home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/backend/api/logger.py:17]
