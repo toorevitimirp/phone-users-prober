@@ -63,6 +63,13 @@ def load_data(collection):
     return user_data
 
 
+def get_complained_users(collection):
+    # 返回被投诉的用户的数据
+    db = _connect_mongo(host='localhost', port=27017)
+    complained_users = DataFrame(list(db[collection].find({'label': 1}, {'_id': 0})))
+    return complained_users
+
+
 def get_series_form_collection(collection, feature):
     # 返回某个数据集的某一列
     db = _connect_mongo(host='localhost', port=27017)

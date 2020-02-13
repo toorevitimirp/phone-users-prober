@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from flask import Blueprint, request
 from flask_cors import cross_origin
-from etl.database import save_data, get_collection_info, del_data_by_collection_name
+from etl.database import save_data, get_collection_info, del_data_by_collection_name, get_complained_users
 from etl.washer import wash_data
 # from bson import json_util
 
@@ -66,3 +66,17 @@ def del_data():
         json_data = json.loads(data.decode('utf-8'))
         name = json_data['name']
     return del_data_by_collection_name(name)
+
+
+@data_center.route('/complained-users', methods=['POST'])
+@cross_origin()
+def complained_users():
+    if request.method == 'POST':
+        req_data = request.get_data()
+        json_data = json.loads(req_data.decode('utf-8'))
+        collection = json_data['collection']
+        print(json_data)
+        data = get_complained_users(collection)
+        data = data.to_json(orient='records')
+        res = {'result': 0, 'data': data}
+    return res

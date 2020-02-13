@@ -17,7 +17,8 @@
             <a href="javascript:;">数据中心</a>
             <dl class="layui-nav-child">
               <dd><a onclick="open_upload_window()">上传数据</a></dd>
-              <dd><a onclick="check_data_table()">数据信息</a></dd>
+              <dd><a onclick="check_data_table()">数据面板</a></dd>
+              <dd><a onclick="get_complained_users()">被投诉用户信息</a></dd>
             </dl>
           </li>
           <li class="layui-nav-item">
@@ -25,6 +26,7 @@
             <dl class="layui-nav-child">
               <dd><a onclick="boxplot()">盒图</a></dd>
               <dd><a onclick="basic()">基本统计信息</a></dd>
+              <dd><a onclick="complain()">异常者统计信息</a></dd>
               <!-- <dd><a onclick="check_data_table()">数据信息</a></dd> -->
             </dl>
           </li>
@@ -75,6 +77,26 @@
   function basic(){
     var iframe = document.getElementById("content")
     iframe.src = "/html/statistic/basic.html"
+  }
+
+  function complain(){
+    // var iframe = document.getElementById("content")
+    // iframe.src = "/html/statistic/complained-statis.html"
+    var height=  window.innerHeight -200
+    var width = window.innerWidth -100
+    var top = (window.screen.height-30-height)/2
+    var left = (window.screen.width-10-width)/2
+    var url = "/html/statistic/complained-statis.html"
+    features =  "height="+height+
+                ",width="+width+
+                ",top="+top+
+                ",left="+left
+    window.open(url,"异常者统计",features)
+  }
+
+  function get_complained_users(){
+    var iframe = document.getElementById("content")
+    iframe.src = "/html/data-center/complained-users.html"
   }
 </script>
 </body>
