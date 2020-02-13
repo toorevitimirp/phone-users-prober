@@ -6,6 +6,7 @@
   <title>手机用户分析系统</title>
   <link rel="stylesheet" href="/static/layui/css/layui.css" >
   <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
+  <!-- https://www.jianshu.com/p/1841b6e3ad86 -->
 </head>
 <body  class="container">
     <form class="layui-form layui-row" action="">
@@ -17,7 +18,11 @@
             </div>
         </div>      
      </form>
-    <table  id="table" lay-filter="filter"></table>
+     <label class="layui-form-label" id="label_num" style="display: none">数值型数据</label>
+    <table  id="numerical" lay-filter="filter"></table>
+
+    <label class="layui-form-label" id="label_bool" style="display: none">布尔型数据</label>
+    <table  id="bool" lay-filter="filter1"></table>
 
 </body>
 <script src="/static/jquery/jquery.min.js"></script>
@@ -54,6 +59,9 @@
                         var index = data.value;
                         var name = data.elem[data.elem.selectedIndex].text;
                         collection = name
+                        
+                        document.getElementById('label_num').style=''
+                        document.getElementById('label_bool').style=''
                         render_table(collection)
                     });
                 })
@@ -69,11 +77,11 @@
     function render_table(collection){
         layui.use('table', function(){
             var table = layui.table;
-            var height = window.innerHeight -100
+            var height = window.innerHeight -300
             table.render({
-                elem: '#table'
+                elem: '#bool'
                 ,height: height
-                ,url: 'http://localhost:5000/statistic/api/v1.0/basic' //数据接口
+                ,url: 'http://localhost:5000/statistic/api/v1.0/basic-bool' //数据接口
                 ,method: 'POST'
                 ,where: {'collection' :collection}
                 ,contentType:'application/json'
@@ -86,15 +94,47 @@
                     "data": res.data //解析数据列表
                     };
                 }
-                ,cols: [[ //表头
+                ,cols: [[ //表头 
                     {field: 'feature', title: '特征',width:100}
-                    ,{field: 'min', title: '最小值', }
-                    ,{field: 'max', title: '最大值', }
-                    ,{field: 'max-min', title: '最小值-最大值', }
+                    ,{field: 'zero', title: '0', }
+                    ,{field: 'one', title: '1', }
+                    ,{field: 'all', title: 'all', }
+                    ,{field: 'zero_all', title: '0/all', }
+                    ,{field: 'one_all', title: '1/all', }
+                ]]
+            });
+            
+        })
+        layui.use('table', function(){
+            var table = layui.table;
+            var height = window.innerHeight -200
+            table.render({
+                elem: '#numerical'
+                ,height: height
+                ,url: 'http://localhost:5000/statistic/api/v1.0/basic-num' //数据接口
+                ,method: 'POST'
+                ,where: {'collection' :collection}
+                ,contentType:'application/json'
+                ,page: true //开启分页
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                    "code": res.result, //解析接口状态/
+                    "msg": "", //解析提示文本
+                    "count": NaN, //解析数据长度
+                    "data": res.data //解析数据列表
+                    };
+                }
+                ,cols: [[ //表头 
+                    {field: 'feature', title: '特征',width:100}
                     ,{field: 'var', title: '方差', }
                     ,{field: 'std', title: '标准差', }
                     ,{field: 'mean', title: '平均值', }
-                    ,{field: 'media', title: '中位数', }
+                    ,{field: 'min', title: '最小值', }
+                    ,{field: 'quant_25', title: '25%', }
+                    ,{field: 'median', title: '中位数', }
+                    ,{field: 'quant_25', title: '75%', }
+                    ,{field: 'max', title: '最大值', }
+                    ,{field: 'max-min', title: '最小值-最大值', }
                 ]]
             });
             
