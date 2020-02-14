@@ -1,13 +1,5 @@
 # import pandas as pd
-from data import get_all_data
-
-bool_features = ['users_3w', 'twolow_users', 'roam_users02', 'roam_users01',
-                 'vv_type', 'in16_roam_tag']
-num_features = ['roam_call_duration', 'roam_duration_02', 'mon_use_days',
-                'is_p_app_wx_times', 'zhujiao_time', 'zhujiao_times',
-                'mb5', 'mb10', 'mb30', 'mb60', 'ma60', 'total_count',
-                'beijiao_times', 'use_days', 'zhujiao', 'beijiao',
-                'zhujiao_jt', 'open', 'close', 'open_day', 'cell_num']
+from utils import get_all_data
 
 
 def bool_num():

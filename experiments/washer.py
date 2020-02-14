@@ -23,12 +23,14 @@ def _is_number(num):
 
 
 def wash_data(user_data):
-    # 剔除含有非数值型数据的行
     user_data.dropna(inplace=True)
+
+    user_data.replace({'0': 0, '1': 1}, inplace=True)
     # del_series=user_data.applymap(_is_number).all(1)
     # del_list = [i for i, x in enumerate(del_series) if x == False]
     # user_data.drop(del_list,inplace=True)
 
+    # 剔除含有非数值型数据的行
     del_list = []
     for column in user_data.columns:
         if user_data[column].dtype == "object":
