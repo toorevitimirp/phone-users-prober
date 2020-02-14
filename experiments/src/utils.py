@@ -11,7 +11,7 @@ num_features = ['roam_call_duration', 'roam_duration_02', 'mon_use_days',
                 'zhujiao_jt', 'open', 'close', 'open_day', 'cell_num']
 
 
-def get_all_data(features_file='./data/3月用户相关数据.csv', label_file='./data/3月被投诉用户.csv'):
+def get_all_data(features_file='../data/3月用户相关数据.csv', label_file='../data/3月被投诉用户.csv'):
     user_data = pd.read_csv(features_file, encoding='utf-8')
     complain_users = pd.read_csv(label_file, encoding='utf-8')["user_id"]
 
