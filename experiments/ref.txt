@@ -6,3 +6,6 @@ https://www.jianshu.com/p/42f1d2909bb6
 
 how-to-develop-an-intuition-skewed-class-distributions
 https://machinelearningmastery.com/how-to-develop-an-intuition-skewed-class-distributions/
+
+imbalance-learn lib
+https://imbalanced-learn.readthedocs.io/en/stable/

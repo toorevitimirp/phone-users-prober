@@ -12,7 +12,8 @@ data_all = get_all_data(features_file=features, label_file=label)
 # data_all = pd.read_csv(path, encoding='latin1')
 
 
-def bar_plot():
+def bool_feature_distribution():
+    # 对label分组，考察label关于不同布尔型特征的分布
     # for col in bool_features:
     #     print(data_all.groupby('label')[col].value_counts().unstack())
 
@@ -27,25 +28,32 @@ def bar_plot():
         # plt.show()
 
 
-def kde_plot():
-    grouped = data_all.groupby('label')
-    for col in num_features:
-        grouped[col].plot(kind='kde', legend=True)
-        plt.title(col)
-        plt.show()
-
-
-def scatter():
-
+def num_scatter_all():
+    # 数值型特征之间的二维散点图，包含0和1类
     grouped = data_all.groupby('label')
     label1_df = grouped.get_group(1)
     label0_df = grouped.get_group(0)
     count = 0
     for i, x1 in enumerate(num_features):
-        for x2 in num_features[i+1:]:
+        for x2 in num_features[i + 1:]:
             ax = label0_df.plot.scatter(x=x1, y=x2, color='b', marker='x', label='label=0')
             label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1', ax=ax)
-            plt.savefig('../notes/image/scatter/'+x1+'--'+x2)
+            plt.savefig('../notes/image/scatter-all/' + x1 + '--' + x2)
+            count += 1
+            print(count)
+    print('done')
+    print('all:', count)
+
+
+def num_scatter_1():
+    # 数值型特征之间的二维散点图，只包含1类
+    grouped = data_all.groupby('label')
+    label1_df = grouped.get_group(1)
+    count = 0
+    for i, x1 in enumerate(num_features):
+        for x2 in num_features[i + 1:]:
+            label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1')
+            plt.savefig('../notes/image/scatter-1/' + x1 + '--' + x2)
             count += 1
             print(count)
     print('done')
@@ -53,7 +61,7 @@ def scatter():
 
 
 def main():
-    scatter()
+    num_scatter_1()
 
 
 if __name__ == '__main__':
