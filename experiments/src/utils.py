@@ -1,6 +1,8 @@
-import pandas as pd
-
-from washer import wash_data
+"""
+normalization and wash data
+"""
+import re
+from pandas import DataFrame
 
 bool_features = ['users_3w', 'twolow_users', 'roam_users02', 'roam_users01',
                  'vv_type', 'in16_roam_tag']
@@ -11,34 +13,55 @@ num_features = ['roam_call_duration', 'roam_duration_02', 'mon_use_days',
                 'zhujiao_jt', 'open', 'close', 'open_day', 'cell_num']
 
 
-def get_all_data(features_file='../data/3月用户相关数据.csv', label_file='../data/3月被投诉用户.csv'):
-    user_data = pd.read_csv(features_file, encoding='utf-8')
-    complain_users = pd.read_csv(label_file, encoding='utf-8')["user_id"]
-
-    all_users_id = user_data["user_id"]
-    labels = all_users_id.isin(complain_users).astype("int")
-    user_data["label"] = labels
-
-    clean_data = wash_data(user_data)
-    # count1 = 0
-    # for i, val in enumerate(clean_data['label']):
-    #     if val == 1:
-    #         print('1:', i, clean_data['user_id'][i])
-    #         count1 += 1
-    #     elif val == 0:
-    #         pass
-    #         # print('0:', clean_data['user_id'][i])
-    #     else:
-    #         print(val)
-    #
-    # print(count1)
-    # print(clean_data.groupby('label')['twolow_users'].value_counts())
-    return clean_data
+def z_score(data):
+    # z-score规范化
+    data = (data - data.mean()) / data.std()
+    return data
 
 
-def main():
-    get_all_data()
+def max_min(clean_data):
+    # max-min规范化
+    pass
 
 
-if __name__ == '__main__':
-    main()
+def _is_number(num):
+    pattern = re.compile(r'^[-+]?[-0-9]\d*\.\d*|[-+]?\.?[0-9]\d*$')
+    result = pattern.match(str(num))
+    if result:
+        return True
+    else:
+        return False
+
+
+def wash_data(user_data):
+    user_data.dropna(inplace=True)
+
+    replace_rule = {'0': 0, '1': 1, '公众': 0, '湖南长沙': 1}
+    user_data.replace(replace_rule, inplace=True)
+    # del_series=user_data.applymap(_is_number).all(1)
+    # del_list = [i for i, x in enumerate(del_series) if x == False]
+    # user_data.drop(del_list,inplace=True)
+
+    # 剔除含有非数值型数据的行
+    del_list = []
+    for column in user_data.columns:
+        if user_data[column].dtype == "object":
+            i = 0
+            for val in user_data[column]:
+                if not str(val).replace(".", "").isdigit():
+                    print("删除列{},第{}行数据：{}".format(column, i,val))
+                    del_list.append(i)
+                i += 1
+    user_data.drop(del_list, inplace=True)
+    return user_data
+
+# def get_data(collection):
+#     try:
+#         user_data = load_data(collection)
+#         print(user_data)
+#         res = {'result':200,'data':user_data.to_json()}
+#     except BaseException as e:
+#         print('exception:',e)
+#         res = {'result':500,'data':None}
+#     finally:
+#        return res

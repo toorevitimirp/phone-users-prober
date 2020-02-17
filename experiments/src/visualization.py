@@ -1,6 +1,9 @@
+"""
+数据可视化
+"""
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils import get_all_data, num_features, bool_features
+from data import get_all_data, num_features, bool_features
 
 plt.style.use('ggplot')
 features = '../data/3月用户相关数据.csv'

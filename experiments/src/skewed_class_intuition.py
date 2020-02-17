@@ -1,3 +1,6 @@
+"""
+对于imbalanced data 有一个直观的理解
+"""
 from numpy import where
 from numpy import unique
 from numpy import hstack

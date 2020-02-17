@@ -1,6 +1,10 @@
+"""
+没用的代码，留日后参考
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils import get_all_data, num_features, bool_features
+from .. data import get_all_data, num_features, bool_features
 
 plt.style.use('ggplot')
 features = '../data/3月用户相关数据.csv'
@@ -10,8 +14,6 @@ data_all = get_all_data(features_file=features, label_file=label)
 
 # path = 'https://raw.githubusercontent.com/HoijanLai/dataset/master/PoliceKillingsUS.csv'
 # data_all = pd.read_csv(path, encoding='latin1')
-
-
 def bar_plot():
     # for col in bool_features:
     #     print(data_all.groupby('label')[col].value_counts().unstack())

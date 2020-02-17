@@ -9,3 +9,10 @@ https://machinelearningmastery.com/how-to-develop-an-intuition-skewed-class-dist
 
 imbalance-learn lib
 https://imbalanced-learn.readthedocs.io/en/stable/
+
+linear svc
+https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC
+
+
+Choosing the right estimator
+https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html

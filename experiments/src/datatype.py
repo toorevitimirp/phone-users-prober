@@ -1,5 +1,7 @@
-# import pandas as pd
-from utils import get_all_data
+"""
+对features按数据类型分类
+"""
+from data import get_all_data
 
 
 def bool_num():

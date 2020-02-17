@@ -87,9 +87,12 @@ label                0      1
 * under sampling
 * over sampling
 * cost sensitive
+* anomaly detection
 * 如图
 
-![1581688337158](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-number-prober/experiments/notes/image/1581688337158.png)
+![1581688337158](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1581688337158.png)
+
+
 
 # PCA降维
 
