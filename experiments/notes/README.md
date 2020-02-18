@@ -96,3 +96,14 @@ label                0      1
 
 # PCA降维
 
+# SVM
+
+### 不考虑skewed class问题，直接训练
+
+![1581924881240](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1581924334184.png)
+
+### cost learning
+
+class_weight={0: 7, 1: 10000}
+
+![1582015111861](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582015111861.png)

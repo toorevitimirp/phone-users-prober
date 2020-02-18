@@ -16,3 +16,7 @@ https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#skl
 
 Choosing the right estimator
 https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
+
+
+Python sklearn 实现过采样和欠采样
+https://blog.csdn.net/qq_27802435/article/details/81201357?fps=1&locationNum=2

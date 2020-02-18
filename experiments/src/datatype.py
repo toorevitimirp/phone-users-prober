@@ -1,14 +1,14 @@
 """
 对features按数据类型分类
 """
-from data import get_all_data
+from data_utils import get_clean_raw_data
 
 
 def bool_num():
     # 测试feature的数据类型，(bool or numerical)
     bool_features = []
     num_features = []
-    data = get_all_data()
+    data = get_clean_raw_data()
     data = data.drop('label', 1)
     data = data.drop('user_id', 1)
     data = data.drop('_id', 1)

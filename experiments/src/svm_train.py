@@ -2,31 +2,22 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_predict, KFold
-from data import get_all_data
-from utils import num_features, bool_features
+from other_utils import beep
+from data_utils import num_features, bool_features, prepare_data_4_model
 from evaluation import imbalanced_evaluation
-
-def prepare_data():
-    raw_data = get_all_data()
-    # raw_data = get_all_data(
-    #     features_file='../data/March_features_test.csv',
-    #     label_file='../data/March_labels_test.csv')
-    all_features = num_features + bool_features
-    print(all_features)
-    X = np.array(raw_data[all_features])
-    y = np.array(raw_data['label'])
-    X_scaled = preprocessing.scale(X)
-    return X_scaled, y
 
 
 def linear_kernel():
-    X, y = prepare_data()
+    beep()
+    X, y = prepare_data_4_model(features_file='../data/3月用户相关数据.csv',
+                                label_file='../data/3月被投诉用户.csv')
     k_fold = KFold(n_splits=2, shuffle=True)
-    clf = LinearSVC()
+    clf = LinearSVC(max_iter=10000, class_weight={0: 7, 1: 10000})
     for train_indices, test_indices in k_fold.split(X):
         clf.fit(X[train_indices], y[train_indices])
         prediction = clf.predict(X[test_indices])
         print(imbalanced_evaluation(y[test_indices], prediction))
+    beep()
     print('done')
 
 
