@@ -9,8 +9,8 @@ from evaluation import imbalanced_evaluation
 
 def linear_kernel():
     beep()
-    X, y = prepare_data_4_model(features_file='../data/3月用户相关数据.csv',
-                                label_file='../data/3月被投诉用户.csv')
+    X, y, users_id = prepare_data_4_model(features_file='../data/3月用户相关数据.csv',
+                                          label_file='../data/3月被投诉用户.csv')
     k_fold = KFold(n_splits=2, shuffle=True)
     clf = LinearSVC(max_iter=10000, class_weight={0: 7, 1: 10000})
     for train_indices, test_indices in k_fold.split(X):

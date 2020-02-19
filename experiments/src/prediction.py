@@ -10,6 +10,7 @@ from data_utils import prepare_data_4_model
 #     # print(complained_users_id)
 #     return complained_users_id
 from data_utils import num_features, bool_features, prepare_data_4_model
+from evaluation import imbalanced_evaluation
 
 
 def get_complained_users_id(model,
@@ -23,7 +24,7 @@ def get_complained_users_id(model,
     indices = np.where(y_test_prediction == 1)
     complained_users_id = users_id[indices]
 
-    print(complained_users_id)
-    print(len(complained_users_id))
+    evaluation = imbalanced_evaluation(y_test, y_test_prediction)
+    print('1类数量：{}'.format(len(complained_users_id)))
     return complained_users_id
 

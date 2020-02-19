@@ -15,19 +15,11 @@ data_all = get_all_data(features_file=features, label_file=label)
 # path = 'https://raw.githubusercontent.com/HoijanLai/dataset/master/PoliceKillingsUS.csv'
 # data_all = pd.read_csv(path, encoding='latin1')
 def bar_plot():
-    # for col in bool_features:
-    #     print(data_all.groupby('label')[col].value_counts().unstack())
-
-    grouped = data_all.groupby('label')
-    print(grouped['users_3w'].value_counts().unstack()[0])
-    print(grouped['signs_of_mental_illness'].value_counts().unstack())
-    for col in bool_features:
-        toplot = grouped[col].value_counts().unstack()
-        print(toplot)
+    group = data_all.groupby('label')
+    for feature in bool_features:
+        to_plot = group[feature].value_counts().unstack()
+        print(to_plot)
         print('############################')
-        # toplot.plot(kind='bar')
-        # plt.show()
-
 
 def kde_plot():
     grouped = data_all.groupby('label')

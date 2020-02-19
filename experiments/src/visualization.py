@@ -15,7 +15,6 @@ data_all = get_clean_raw_data(features_file=features, label_file=label)
 # data_all = pd.read_csv(path, encoding='latin1')
 
 
-
 def bool_feature_distribution():
     # 对label分组，考察label关于不同布尔型特征的分布
     # for col in bool_features:
