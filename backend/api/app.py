@@ -12,43 +12,27 @@ import api.route
 import api.error
 
 
-@app.route('/test', methods=['GET'])
+@app.route('/test', methods=['GET','POST'])
 @cross_origin()
 def test():
-    maps = {
-        'feature': '特征',
-        'min': '最小值',
-        'max': '最大值',
-        'max-min': '最小值和最大值的差',
-        'var': '方差',
-        'std': '标准差',
-        'mean': '平均值',
-        'media': '中位数'
-    }
-    data = [
-        {
-            'feature': 'roam_call_duration',
-            'min': 0,
-            'max': 100,
-            'max-min': 100,
-            'var': 98,
-            'std': 72,
-            'mean': 59,
-            'media': 56
-        },
-        {
-            'feature': 'mon_use_days',
-            'min': 0,
-            'max': 100,
-            'max-min': 100,
-            'var': 98,
-            'std': 72,
-            'mean': 59,
-            'media': 56
-        }
-    ]
-    return {'result': 0, 'data': data}
-
+    # 画图
+    import matplotlib.pyplot as plt
+    import numpy as np
+    x = np.linspace(0,np.pi*2,100)
+    y = np.sin(x)
+    plt.figure()
+    plt.plot(x,y)
+    
+    #转换成base64
+    from io import BytesIO
+    figfile = BytesIO()
+    plt.savefig(figfile, format='png')
+    figfile.seek(0)  # rewind to beginning of file
+    import base64
+    #figdata_png = base64.b64encode(figfile.read())
+    figdata_png = base64.b64encode(figfile.getvalue())
+    return figdata_png
+    
 
 @app.route('/maps', methods=['GET'])
 @cross_origin()

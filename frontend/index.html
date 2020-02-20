@@ -25,6 +25,7 @@
             <a href="javascript:;">统计与可视化</a>
             <dl class="layui-nav-child">
               <dd><a onclick="boxplot()">盒图</a></dd>
+              <dd><a onclick="base64test()">base64测试</a></dd>
               <dd><a onclick="basic()">基本统计信息</a></dd>
               <dd><a onclick="complain()">异常者统计信息</a></dd>
               <!-- <dd><a onclick="check_data_table()">数据信息</a></dd> -->
@@ -97,6 +98,10 @@
   function get_complained_users(){
     var iframe = document.getElementById("content")
     iframe.src = "/html/data-center/complained-users.html"
+  }
+  function base64test(){
+    var iframe = document.getElementById("content")
+    iframe.src = "/html/visualization/base64test.html"
   }
 </script>
 </body>

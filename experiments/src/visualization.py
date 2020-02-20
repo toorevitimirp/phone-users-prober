@@ -3,7 +3,10 @@
 """
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn import preprocessing
+
 from data_utils import get_clean_raw_data, num_features, bool_features
+import matplotlib.pyplot as plt
 
 plt.style.use('ggplot')
 features = '../data/3月用户相关数据.csv'
@@ -63,8 +66,18 @@ def num_scatter_1():
     print('all:', count)
 
 
+def box_plot():
+    data = preprocessing.scale(data_all)
+    print(data)
+    data = pd.DataFrame(data)
+    # df = get_clean_raw_data(features_file='../data/3月用户相关数据.csv',
+    #                         label_file='../data/3月被投诉用户.csv')
+    # num_features,bool_features
+    data.plot.box(title="Consumer spending in each country")
+    plt.show()
+
 def main():
-    num_scatter_1()
+    box_plot()
 
 
 if __name__ == '__main__':
