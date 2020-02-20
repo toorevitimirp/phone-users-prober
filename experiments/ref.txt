@@ -20,3 +20,6 @@ https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
 
 Python sklearn 实现过采样和欠采样
 https://blog.csdn.net/qq_27802435/article/details/81201357?fps=1&locationNum=2
+
+python 统计推断
+https://zhuanlan.zhihu.com/p/52302383
