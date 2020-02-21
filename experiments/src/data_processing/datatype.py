@@ -1,7 +1,8 @@
 """
 对features按数据类型分类
 """
-from data_utils import get_clean_raw_data
+import common
+from data_processing.data_utils import get_clean_raw_data
 
 
 def bool_num():

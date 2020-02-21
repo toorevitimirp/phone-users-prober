@@ -1,14 +1,17 @@
 """
 数据可视化
 """
+import common
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
-from data_utils import get_clean_raw_data, num_features, bool_features
-import seaborn as sns
+from data_processing.data_utils import get_clean_raw_data, num_features, bool_features
 
-from other_utils import beep
+from other.other_utils import beep
+
+features = '../../data/3月用户相关数据.csv'
+label = '../../data/3月被投诉用户.csv'
 
 
 def bool_feature_distribution():
@@ -16,8 +19,6 @@ def bool_feature_distribution():
     对label分组，考察label关于不同布尔型特征的分布
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
 
     # for col in bool_features:
@@ -37,8 +38,6 @@ def num_scatter_all():
     数值型特征之间的二维散点图，包含0和1类
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
 
     grouped = data_all.groupby('label')
@@ -61,8 +60,6 @@ def num_scatter_1():
     数值型特征之间的二维散点图，只包含1类
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data_all.groupby('label')
     label1_df = grouped.get_group(1)
@@ -82,14 +79,10 @@ def box_plot():
     盒图
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     data = preprocessing.scale(data_all)
     print(data)
     data = pd.DataFrame(data)
-    # df = get_clean_raw_data(features_file='../data/3月用户相关数据.csv',
-    #                         label_file='../data/3月被投诉用户.csv')
     # num_features,bool_features
     data.plot.box(title="Consumer spending in each country")
     plt.show()
@@ -100,8 +93,6 @@ def pie_bool_all():
     布尔型特征，饼图，正负两类
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     bin_label = ['0', '1']
     for col in bool_features:
@@ -122,8 +113,6 @@ def bar_bool_0vs1_label():
     布尔型特征，条形图，0类中某布尔特征的分布和1类中该布尔特征的分布
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data_all.groupby('label')
     for col in bool_features:
@@ -159,8 +148,6 @@ def bar_bool_0vs1_feature():
     布尔型特征，条形图，某布尔特征为0时，label的分布;某布尔特征为1时，label的分布;
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data_all.groupby('label')
     for col in bool_features:
@@ -200,8 +187,6 @@ def kde_plot_all():
     密度图,数值型特征
     :return:
     """
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     beep()
     for col in num_features:
@@ -232,8 +217,6 @@ def hist_plot_all():
     直方图（密度图有缺陷）,数值型特征
     :return:
     """
-    label = '../data/3月被投诉用户.csv'
-    features = '../data/3月用户相关数据.csv'
     data = get_clean_raw_data(features_file=features, label_file=label)
     for col in num_features:
         plt.figure()
@@ -244,8 +227,6 @@ def hist_plot_all():
 
 
 def hist_plot_0vs1():
-    label = '../data/3月被投诉用户.csv'
-    features = '../data/3月用户相关数据.csv'
     data = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data.groupby('label')
     label1_df = grouped.get_group(1)
@@ -263,14 +244,12 @@ def hist_plot_0vs1():
         label1_df[col].plot(kind='hist')
         plt.xlabel('label=1')
 
-        # plt.show()
-        plt.savefig('../notes/image/hist-0vs1/' + col)
+        plt.show()
+        # plt.savefig('../notes/image/hist-0vs1/' + col)
     beep()
 
 
 def kde_plot_0vs1():
-    features = '../data/3月用户相关数据.csv'
-    label = '../data/3月被投诉用户.csv'
     data_all = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data_all.groupby('label')
     beep()
@@ -301,8 +280,6 @@ def kde_open_wxtimes_close_cell_num_0vs1():
     :return:
     """
     strange = ['open', 'is_p_app_wx_times', 'close', 'cell_num']
-    label = '../data/3月被投诉用户.csv'
-    features = '../data/3月用户相关数据.csv'
     data = get_clean_raw_data(features_file=features, label_file=label)
     grouped = data.groupby('label')
     label1_df = grouped.get_group(1)

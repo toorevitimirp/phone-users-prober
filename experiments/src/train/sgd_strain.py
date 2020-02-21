@@ -1,12 +1,11 @@
+import common
 from collections import Counter
-import numpy as np
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import cross_val_predict, KFold
-from other_utils import beep
-from data_utils import num_features, bool_features, prepare_data_4_model
-from evaluation import imbalanced_evaluation
-import prediction as pre
+from sklearn.model_selection import KFold
+from other.other_utils import beep
+from data_processing.data_utils import prepare_data_4_model
+import prediction.prediction as pre
 
 
 def sampling(X, y):
@@ -26,8 +25,8 @@ def sampling(X, y):
 
 def sgd():
     beep()
-    X, y, user_id = prepare_data_4_model(features_file='../data/3月用户相关数据.csv',
-                                         label_file='../data/3月被投诉用户.csv')
+    X, y, user_id = prepare_data_4_model(features_file='../../data/3月用户相关数据.csv',
+                                         label_file='../../data/3月被投诉用户.csv')
     k_fold = KFold(n_splits=5, shuffle=True)
     clf = SGDClassifier(max_iter=10000, class_weight={0: 70, 1: 10000})
     # for train_indices, test_indices in k_fold.split(X):
@@ -40,8 +39,8 @@ def sgd():
 
     clf.fit(X, y)
     pre.get_complained_users_id(clf,
-                                features_file_test='../data/4月用户相关数据.csv',
-                                label_file_test='../data/4月被投诉用户.csv')
+                                features_file_test='../../data/4月用户相关数据.csv',
+                                label_file_test='../../data/4月被投诉用户.csv')
     beep()
 
     print('done')

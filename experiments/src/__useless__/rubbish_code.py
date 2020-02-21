@@ -4,11 +4,11 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-from .. data import get_all_data, num_features, bool_features
+from .. data_processing import get_all_data, num_features, bool_features
 
 plt.style.use('ggplot')
-features = '../data/3月用户相关数据.csv'
-label = '../data/3月被投诉用户.csv'
+features = '../../data/3月用户相关数据.csv'
+label = '../../data/3月被投诉用户.csv'
 data_all = get_all_data(features_file=features, label_file=label)
 
 

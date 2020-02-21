@@ -1,5 +1,5 @@
+import common
 import numpy as np
-from data_utils import prepare_data_4_model
 
 # def get_complained_users_id(y_prediction, user_id):
 #     y_prediction = np.array(y_prediction)
@@ -9,8 +9,8 @@ from data_utils import prepare_data_4_model
 #     complained_users_id = user_id[indices]
 #     # print(complained_users_id)
 #     return complained_users_id
-from data_utils import num_features, bool_features, prepare_data_4_model
-from evaluation import imbalanced_evaluation
+from data_processing.data_utils import prepare_data_4_model
+from evaluation.evaluation import imbalanced_evaluation
 
 
 def get_complained_users_id(model,

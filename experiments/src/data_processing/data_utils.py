@@ -1,6 +1,7 @@
 """
 normalization and wash data
 """
+import common
 import re
 import numpy as np
 import pandas as pd
@@ -115,9 +116,9 @@ def prepare_data_4_model(features_file=None, label_file=None):
 #     try:
 #         user_data = load_data(collection)
 #         print(user_data)
-#         res = {'result':200,'data':user_data.to_json()}
+#         res = {'result':200,'data_processing':user_data.to_json()}
 #     except BaseException as e:
 #         print('exception:',e)
-#         res = {'result':500,'data':None}
+#         res = {'result':500,'data_processing':None}
 #     finally:
 #        return res
