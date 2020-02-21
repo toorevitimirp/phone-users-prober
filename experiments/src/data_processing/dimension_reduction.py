@@ -6,11 +6,8 @@ import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 
 from data_processing.data_utils import get_clean_raw_data, bool_features, num_features
-
 from sklearn.decomposition import PCA
-from pandas import DataFrame
-
-from qtgraph_3d import draw_3d
+from visualization.d3 import pca_visual
 
 
 def variance_threshold(X, p):
@@ -43,8 +40,8 @@ def pca_num_feature(X):
     print('降维前：{}'.format(X.shape))
     pca = PCA(n_components=0.99)
     pca.fit(X)
-    print(pca.explained_variance_ratio_)
-    print(pca.explained_variance_)
+    print('variance:', pca.explained_variance_)
+    print('variance_ratio:', pca.explained_variance_ratio_)
     X_pca = pca.transform(X)
     print('降维后：{}'.format(X_pca.shape))
 
@@ -53,16 +50,6 @@ def pca_num_feature(X):
     # ax.scatter(X_pca[:, 0], X_pca[:, 1], X_pca[:, 2])
     # plt.show()
     return X_pca
-
-
-def pca_visual(X_pca, label):
-    data_all = DataFrame(X_pca)
-    data_all['label'] = label
-    grouped = data_all.groupby('label')
-    data_0 = grouped.get_group(0)
-    data_1 = grouped.get_group(1)
-
-    draw_3d()
 
 
 def feature_extraction():
