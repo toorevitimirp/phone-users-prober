@@ -17,6 +17,12 @@ def draw_3d(pos0, pos1):
     app = QtGui.QApplication([])
     w = gl.GLViewWidget()
     w.show()
+
+    # 增加奇怪的坐标轴
+    # axis_size = QtGui.QVector3D(50000, 50000, 50000)
+    # axis = gl.GLAxisItem(size=axis_size)
+    # w.addItem(axis)
+
     # 增加网格后渲染速度很慢
     # grid_size = QtGui.QVector3D(50000, 50000, 1000)
     # g = gl.GLGridItem(size=grid_size)

@@ -110,9 +110,23 @@ label                0      1
 
 ### 特征提取
 
+###### 1. PCA
+
+保留99%的variance的情况下，数据可以降到3维
+
+![1582359911314](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582359911314.png)
+
+![1582359949607](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582359949607.png)
+
+![1582360010849](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582360010849.png)
+
+# 四、处理imbalanced data
 
 
-# SVM
+
+# 五、模型
+
+###  SVM
 
 ### 不考虑skewed class问题，直接训练
 
