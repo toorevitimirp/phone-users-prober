@@ -114,13 +114,222 @@ label                0      1
 
 保留99%的variance的情况下，数据可以降到3维
 
-![1582359911314](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582359911314.png)
+![1582359911314](image/1582359911314.png)
 
-![1582359949607](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582359949607.png)
+![1582359949607](image/1582359949607.png)
 
-![1582360010849](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582360010849.png)
+![1582360010849](image/1582360010849.png)
 
 # 四、处理imbalanced data
+
+##### sgd classifier，class_weight={0: 80, 1: 920}，k_fold = KFold(n_splits=5, shuffle=True)
+
+1.随机上采样![1582361421192](image/1582361421192.png)
+
+
+
+```
+{
+    "precision": 0.5003343475208132,
+    "recall": 1.0,
+    "f1_score": 0.6669637982328102
+}
+{
+    "precision": 0.5011449133137063,
+    "recall": 0.9959161902221926,
+    "f1_score": 0.6667708240335685
+}
+{
+    "precision": 0.5025460504862163,
+    "recall": 1.0,
+    "f1_score": 0.6689259877573734
+}
+{
+    "precision": 0.500822183083896,
+    "recall": 1.0,
+    "f1_score": 0.6673970957103051
+}
+{
+    "precision": 0.5001797493541564,
+    "recall": 1.0,
+    "f1_score": 0.6668264247260892
+}
+```
+
+2. SMOTE
+
+   kind = regular
+
+   ![1582361261348](image/1582361261348.png)
+
+```
+{
+    "precision": 0.5038632226239713,
+    "recall": 0.9981884660129633,
+    "f1_score": 0.6696846201448394
+}
+{
+    "precision": 0.5012154603187955,
+    "recall": 0.9974055103612199,
+    "f1_score": 0.6671667776987802
+}
+{
+    "precision": 0.5024898220113724,
+    "recall": 0.9969127046376183,
+    "f1_score": 0.6681841314937335
+}
+{
+    "precision": 0.5015323206934273,
+    "recall": 1.0,
+    "f1_score": 0.6680273395138282
+}
+{
+    "precision": 0.5001294460544008,
+    "recall": 1.0,
+    "f1_score": 0.6667817198973429
+}
+```
+
+
+
+3. ADASYN
+
+![1582362929296](image/1582362929296.png)
+
+```
+{
+    "precision": 0.5027217446005452,
+    "recall": 0.9988001799730041,
+    "f1_score": 0.6688128368501512
+}
+{
+    "precision": 0.5003465582176052,
+    "recall": 1.0,
+    "f1_score": 0.6669746472601787
+}
+{
+    "precision": 0.4999290347896508,
+    "recall": 1.0,
+    "f1_score": 0.6666035834952159
+}
+{
+    "precision": 0.5066663318854043,
+    "recall": 0.9996532250074309,
+    "f1_score": 0.672487627680669
+}
+{
+    "precision": 0.49246358028327847,
+    "recall": 0.9843555495744036,
+    "f1_score": 0.6564910332138509
+}
+```
+
+4. 随机下采样
+
+   ![1582366398089](image/1582366398089.png)
+
+   ```
+   {
+       "precision": 0.39325842696629215,
+       "recall": 1.0,
+       "f1_score": 0.564516129032258
+   }
+   {
+       "precision": 0.6395348837209303,
+       "recall": 0.9821428571428571,
+       "f1_score": 0.7746478873239436
+   }
+   {
+       "precision": 0.6,
+       "recall": 0.875,
+       "f1_score": 0.711864406779661
+   }
+   {
+       "precision": 0.4186046511627907,
+       "recall": 1.0,
+       "f1_score": 0.5901639344262295
+   }
+   {
+       "precision": 0.5131578947368421,
+       "recall": 0.8478260869565217,
+       "f1_score": 0.639344262295082
+   }
+   ```
+
+5. NearMiss
+
+   version=1
+
+   ![1582367028880](image/1582367028880.png)
+
+   ```
+   {
+       "precision": 0.5056179775280899,
+       "recall": 1.0,
+       "f1_score": 0.6716417910447761
+   }
+   {
+       "precision": 0.4943820224719101,
+       "recall": 1.0,
+       "f1_score": 0.6616541353383459
+   }
+   {
+       "precision": 0.4659090909090909,
+       "recall": 1.0,
+       "f1_score": 0.6356589147286822
+   }
+   {
+       "precision": 1.0,
+       "recall": 0.6304347826086957,
+       "f1_score": 0.7733333333333333
+   }
+   {
+       "precision": 0.5113636363636364,
+       "recall": 1.0,
+       "f1_score": 0.6766917293233083
+   }
+   ```
+
+version=2
+
+![1582367296854](image/1582367296854.png)
+
+```
+{
+    "precision": 0.88,
+    "recall": 1.0,
+    "f1_score": 0.9361702127659575
+}
+{
+    "precision": 0.9074074074074074,
+    "recall": 0.9607843137254902,
+    "f1_score": 0.9333333333333333
+}
+{
+    "precision": 0.9512195121951219,
+    "recall": 0.975,
+    "f1_score": 0.9629629629629629
+}
+{
+    "precision": 0.6612903225806451,
+    "recall": 1.0,
+    "f1_score": 0.7961165048543689
+}
+{
+    "precision": 0.9777777777777777,
+    "recall": 0.9777777777777777,
+    "f1_score": 0.9777777777777777
+}
+
+```
+
+version=3 （耗时较长）
+
+![1582367948412](image/1582367948412.png)
+
+6. TomekLinks (耗时非常长)
+
+   ![1582369731848](image/1582369731848.png)
 
 
 
@@ -130,10 +339,10 @@ label                0      1
 
 ### 不考虑skewed class问题，直接训练
 
-![1581924881240](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1581924334184.png)
+![1581924881240](image/1581924334184.png)
 
 ### cost learning
 
 class_weight={0: 7, 1: 10000}
 
-![1582015111861](/home/toorevitimirp/Desktop/手机用户分类模型/App/phone-users-prober/experiments/notes/image/1582015111861.png)
+![1582015111861](image/1582015111861.png)

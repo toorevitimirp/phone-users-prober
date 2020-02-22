@@ -1,5 +1,5 @@
 """
-data_processing的主模块，其他包直接从该模块导入函数
+data_processing的主模块
 """
 import common
 import re
@@ -48,7 +48,7 @@ def get_clean_raw_data(features_file=None, label_file=None):
     labels = all_users_id.isin(complain_users).astype("int")
     user_data["label"] = labels
 
-    clean_data = wash_data(user_data)
+    clean_data = _wash_data(user_data)
     # count1 = 0
     # for i, val in enumerate(clean_data['label']):
     #     if val == 1:
@@ -65,7 +65,7 @@ def get_clean_raw_data(features_file=None, label_file=None):
     return clean_data
 
 
-def wash_data(user_data):
+def _wash_data(user_data):
     user_data.dropna(inplace=True)
 
     replace_rule = {'0': 0, '1': 1, '公众': 0, '湖南长沙': 1}
@@ -88,9 +88,9 @@ def wash_data(user_data):
     return user_data
 
 
-def prepare_data_4_model(features_file=None, label_file=None):
+def prepare_data_4_training(features_file=None, label_file=None):
     """
-    imbalanced data processing,降维，feature scaling，升维，获得模型能够直接用的数据
+    imbalanced data processing,降维，feature scaling，升维，获得模型训练能够直接用的数据
     注意处理顺序
     :param features_file:
     :param label_file:
@@ -122,5 +122,36 @@ def prepare_data_4_model(features_file=None, label_file=None):
 
     users_id = raw_data['user_id']
 
-    return X_final, y, users_id
+    return X_final, y
 
+
+def prepare_data_4_prediction(features_file=None, label_file=None):
+    """
+    降维，feature scaling，升维，获得模型能够直接用的数据
+    预测不需要处理imbalanced data，所以要和prepare_data_4_training分开
+    :param features_file:
+    :param label_file:
+    :return:
+    """
+    raw_data = get_clean_raw_data(features_file=features_file,
+                                  label_file=label_file)
+    X = np.array(raw_data[num_features])
+    y = np.array(raw_data['label'])
+    print('特征集文件={},标签文件={}'.format(features_file, label_file))
+    print('原始特征维度：', X.shape[1])
+
+    # 降维
+    X_extract = features_extraction_3d(X)
+
+    # feature scaling -> 升维 -> feature scaling
+    X_scaled = preprocessing.scale(X_extract)
+    poly = PolynomialFeatures(degree=3)
+    X_poly = poly.fit_transform(X_scaled)
+    X_scaled_poly = preprocessing.scale(X_poly)
+
+    X_final = X_scaled_poly
+    print('训练的特征维度：', X_final.shape[1])
+
+    users_id = raw_data['user_id']
+
+    return X_final, y, users_id

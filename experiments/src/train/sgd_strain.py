@@ -7,15 +7,15 @@ from sklearn.model_selection import KFold, cross_val_score, RandomizedSearchCV
 
 from evaluation.imbalanced_evaluation import pre_rec_fscore
 from other.other_utils import beep
-from data_processing.data_utils import prepare_data_4_model
+from data_processing.data_utils import prepare_data_4_training
 import prediction.prediction as pre
 from scipy.stats import randint
 
 
 def sgd():
     beep()
-    X, y, user_id = prepare_data_4_model(features_file='../../data/3月用户相关数据.csv',
-                                         label_file='../../data/3月被投诉用户.csv')
+    X, y = prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
+                                            label_file='../../data/3月被投诉用户.csv')
     k_fold = KFold(n_splits=5, shuffle=True)
 
     # 随机搜索确定class_weight
@@ -39,20 +39,20 @@ def sgd():
     # scores = cross_val_score(clf, X, y, cv=k_fold, scoring='f1')
     # print(scores)
 
-    clf = SGDClassifier(max_iter=10000, class_weight={0: 80, 1: 920})
+    clf = SGDClassifier(max_iter=10000, class_weight='balanced')
     # k折叠交叉验证，使用自己的evaluation
-    for train_indices, test_indices in k_fold.split(X):
-        print('训练集大小：{},测试集大小：{}'.
-              format(len(train_indices), len(test_indices)))
-        clf.fit(X[train_indices], y[train_indices])
-        prediction = clf.predict(X[test_indices])
-        pre_rec_fscore(y[test_indices], prediction)
+    # for train_indices, test_indices in k_fold.split(X):
+    #     print('训练集大小：{},测试集大小：{}'.
+    #           format(len(train_indices), len(test_indices)))
+    #     clf.fit(X[train_indices], y[train_indices])
+    #     prediction = clf.predict(X[test_indices])
+    #     pre_rec_fscore(y[test_indices], prediction)
 
     # 在一个数据集（eg：3月）上训练，预测另一个数据集（eg：4月）上被投诉的用户的id
-    # clf.fit(X, y)
-    # pre.get_complained_users_id(clf,
-    #                             features_file_test='../../data/4月用户相关数据.csv',
-    #                             label_file_test='../../data/4月被投诉用户.csv')
+    clf.fit(X, y)
+    pre.get_complained_users_id(clf,
+                                features_file_test='../../data/4月用户相关数据.csv',
+                                label_file_test='../../data/4月被投诉用户.csv')
     beep()
 
     print('done')
