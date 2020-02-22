@@ -2,7 +2,7 @@ import common
 import json
 
 
-def imbalanced_evaluation(y_actual, y_predict):
+def pre_rec_fscore(y_actual, y_predict):
     true_pos = true_neg = false_pos = false_neg = 0
     for y, y_hat in zip(y_actual, y_predict):
         if y == 1:

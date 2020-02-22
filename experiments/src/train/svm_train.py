@@ -3,7 +3,8 @@ from sklearn.svm import LinearSVC
 from sklearn.model_selection import KFold
 from other.other_utils import beep
 from data_processing.data_utils import prepare_data_4_model
-from evaluation.evaluation import imbalanced_evaluation
+from evaluation.imbalanced_evaluation import pre_rec_fscore
+from prediction.prediction import get_complained_users_id
 
 
 def linear_kernel():
@@ -12,10 +13,14 @@ def linear_kernel():
                                           label_file='../../data/3月被投诉用户.csv')
     k_fold = KFold(n_splits=2, shuffle=True)
     clf = LinearSVC(max_iter=10000, class_weight={0: 7, 1: 10000})
-    for train_indices, test_indices in k_fold.split(X):
-        clf.fit(X[train_indices], y[train_indices])
-        prediction = clf.predict(X[test_indices])
-        print(imbalanced_evaluation(y[test_indices], prediction))
+    # for train_indices, test_indices in k_fold.split(X):
+    #     clf.fit(X[train_indices], y[train_indices])
+    #     prediction = clf.predict(X[test_indices])
+    #     print(pre_rec_fscore(y[test_indices], prediction))
+    clf.fit(X, y)
+    get_complained_users_id(clf,
+                            features_file_test='../../data/4月用户相关数据.csv',
+                            label_file_test='../../data/4月被投诉用户.csv')
     beep()
     print('done')
 

@@ -4,8 +4,6 @@
 import common
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
-
-from data_processing.data_utils import get_clean_raw_data, bool_features, num_features
 from sklearn.decomposition import PCA
 from visualization.d3 import pca_visual
 
@@ -25,6 +23,7 @@ def variance_threshold(X, p):
 
 
 def feature_selection():
+    from data_processing.data_utils import get_clean_raw_data, bool_features, num_features
     raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
                                   label_file='../../data/3月被投诉用户.csv')
     all_features = bool_features+num_features
@@ -52,18 +51,24 @@ def pca_num_feature(X):
     return X_pca
 
 
-def feature_extraction():
-    raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
-                                  label_file='../../data/3月被投诉用户.csv')
-    X = raw_data[num_features]
+def features_extraction_3d(X):
+    """
+    :param X: 特征集，m×n
+    :return:
+    """
+    # raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
+    #                               label_file='../../data/3月被投诉用户.csv')
+    # X = raw_data[num_features]
     X_pca = pca_num_feature(X)
-    label = np.array(raw_data['label']).astype('int')
-    pca_visual(X_pca, label)
+    # label = np.array(raw_data['label']).astype('int')
+    # pca_visual(X_pca, label)
+    X_extract = X_pca
+    return X_extract
 
 
-def main():
-    feature_extraction()
-
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     features_extraction_3d()
+#
+#
+# if __name__ == '__main__':
+#     main()

@@ -9,6 +9,11 @@ from pandas import DataFrame
 
 
 def draw_3d(pos0, pos1):
+    """
+    :param pos0: 0类数据,m×3
+    :param pos1: 1类数据,m×3
+    :return:
+    """
     app = QtGui.QApplication([])
     w = gl.GLViewWidget()
     w.show()

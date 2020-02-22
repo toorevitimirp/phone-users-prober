@@ -10,7 +10,7 @@ import numpy as np
 #     # print(complained_users_id)
 #     return complained_users_id
 from data_processing.data_utils import prepare_data_4_model
-from evaluation.evaluation import imbalanced_evaluation
+from evaluation.imbalanced_evaluation import pre_rec_fscore
 
 
 def get_complained_users_id(model,
@@ -24,7 +24,7 @@ def get_complained_users_id(model,
     indices = np.where(y_test_prediction == 1)
     complained_users_id = users_id[indices]
 
-    evaluation = imbalanced_evaluation(y_test, y_test_prediction)
+    evaluation = pre_rec_fscore(y_test, y_test_prediction)
     print('1类数量：{}'.format(len(complained_users_id)))
     return complained_users_id
 

@@ -1,5 +1,5 @@
 """
-normalization and wash data
+data_processing的主模块，其他包直接从该模块导入函数
 """
 import common
 import re
@@ -8,6 +8,8 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.preprocessing import PolynomialFeatures
 
+from data_processing.dimension_reduction import features_extraction_3d
+from data_processing.imbalance_handle import imbalanced_handle
 
 bool_features = ['users_3w', 'twolow_users', 'roam_users02', 'roam_users01',
                  'vv_type', 'in16_roam_tag']
@@ -88,37 +90,37 @@ def wash_data(user_data):
 
 def prepare_data_4_model(features_file=None, label_file=None):
     """
-    升维，feature scaling，获得模型能够直接用的数据
+    imbalanced data processing,降维，feature scaling，升维，获得模型能够直接用的数据
+    注意处理顺序
     :param features_file:
     :param label_file:
     :return:
     """
     raw_data = get_clean_raw_data(features_file=features_file,
                                   label_file=label_file)
-    all_features = num_features + bool_features
+    # all_features = num_features + bool_features
     X = np.array(raw_data[num_features])
     y = np.array(raw_data['label'])
     print('特征集文件={},标签文件={}'.format(features_file, label_file))
     print('原始特征维度：', X.shape[1])
 
-    X_scaled = preprocessing.scale(X)
+    # imbalanced data processing
+    X_sample, y = imbalanced_handle(X, y)
 
-    poly = PolynomialFeatures()
+    # 降维
+    X_extract = features_extraction_3d(X_sample)
+    # print(X_extract)
+
+    # feature scaling -> 升维 -> feature scaling
+    X_scaled = preprocessing.scale(X_extract)
+    poly = PolynomialFeatures(degree=3)
     X_poly = poly.fit_transform(X_scaled)
+    X_scaled_poly = preprocessing.scale(X_poly)
 
-    X_poly_scaled = preprocessing.scale(X_poly)
-    print('升维后特征维度：', X_poly.shape[1])
+    X_final = X_scaled_poly
+    print('训练的特征维度：', X_final.shape[1])
 
     users_id = raw_data['user_id']
 
-    return X_poly_scaled, y, users_id
-# def get_data(collection):
-#     try:
-#         user_data = load_data(collection)
-#         print(user_data)
-#         res = {'result':200,'data_processing':user_data.to_json()}
-#     except BaseException as e:
-#         print('exception:',e)
-#         res = {'result':500,'data_processing':None}
-#     finally:
-#        return res
+    return X_final, y, users_id
+
