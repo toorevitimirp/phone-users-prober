@@ -168,7 +168,7 @@ def _smotetomek(X, y):
 
 
 def imbalanced_handle(X, y):
-    # X_sampled, y_sampled = _smoteenn(X, y)
+    X_sampled, y_sampled = _smoteenn(X, y)
     # X_sampled, y_sampled = _iht(X, y)
     # X_sampled, y_sampled = _tomek_links(X, y)
     # X_sampled, y_sampled = _near_miss(X, y)
@@ -176,7 +176,7 @@ def imbalanced_handle(X, y):
     # X_sampled, y_sampled = _smote(X, y)
     # X_sampled, y_sampled = _adasyn(X, y)
     # X_sampled, y_sampled = _random_over_sample(X, y)
-    X_sampled, y_sampled = X, y
+    # X_sampled, y_sampled = X, y
     return X_sampled, y_sampled
 
 

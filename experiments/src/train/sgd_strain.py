@@ -7,7 +7,7 @@ from sklearn.model_selection import KFold, cross_val_score, RandomizedSearchCV
 
 from evaluation.imbalanced_evaluation import pre_rec_fscore
 from other.other_utils import beep
-from data_processing.data_utils import prepare_data_4_training
+from data_processing.data_utils import prepare_data_4_training, prepare_data_4_prediction
 import prediction.prediction as pre
 from scipy.stats import randint
 
@@ -39,7 +39,7 @@ def sgd():
     # scores = cross_val_score(clf, X, y, cv=k_fold, scoring='f1')
     # print(scores)
 
-    clf = SGDClassifier(max_iter=10000, class_weight='balanced')
+    clf = SGDClassifier(max_iter=10000, class_weight='balanced', loss="log")
     # k折叠交叉验证，使用自己的evaluation
     # for train_indices, test_indices in k_fold.split(X):
     #     print('训练集大小：{},测试集大小：{}'.
@@ -50,9 +50,16 @@ def sgd():
 
     # 在一个数据集（eg：3月）上训练，预测另一个数据集（eg：4月）上被投诉的用户的id
     clf.fit(X, y)
-    pre.get_complained_users_id(clf,
-                                features_file_test='../../data/4月用户相关数据.csv',
-                                label_file_test='../../data/4月被投诉用户.csv')
+    # X_test, y_test, user_id = prepare_data_4_prediction(features_file='../../data/4月用户相关数据.csv',
+    #                                                     label_file='../../data/4月被投诉用户.csv')
+    # pred_proba = clf.predict_proba(X_test)
+    # print(pred_proba)
+    pre.predict_complained_users_id(clf,
+                                    features_file_test='../../data/4月用户相关数据.csv',
+                                    label_file_test='../../data/4月被投诉用户.csv')
+    # pre.predict_complained_users_id(clf,
+    #                                 features_file_test='../../data/3月用户相关数据.csv',
+    #                                 label_file_test='../../data/3月被投诉用户.csv')
     beep()
 
     print('done')

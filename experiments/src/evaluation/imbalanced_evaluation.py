@@ -39,6 +39,13 @@ def pre_rec_fscore(y_actual, y_predict):
         print(e)
         f1_score = 0
 
-    evaluation = {'precision': precision, 'recall': recall, 'f1_score': f1_score}
+    evaluation = {'precision': precision,
+                  'recall': recall,
+                  'f1_score': f1_score}
+    evaluation_detail = {'true_pos': true_pos,
+                         'true_neg': true_neg,
+                         'false_pos': false_pos,
+                         'false_neg': false_neg}
     print(json.dumps(evaluation, indent=4, ensure_ascii=False))
+    print(json.dumps(evaluation_detail, indent=4, ensure_ascii=False))
     return evaluation

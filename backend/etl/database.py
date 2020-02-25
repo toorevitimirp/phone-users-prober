@@ -2,13 +2,11 @@ import json
 import pymongo
 import time
 from pandas import DataFrame
-
 from api.logger import log
+from config import data_info, model_info
 
-data_info = "data-info"  # 储存集合元数据
 
-
-def _connect_mongo(host, port, username=None, password=None, db='phone-number-prober'):
+def connect_mongo(host, port, username=None, password=None, db='phone-number-prober'):
     """ A util for making a connection to mongo """
     if username and password:
         mongo_uri = 'mongodb://%s:%s@%s:%s/%s' % (username, password, host, port, db)
@@ -21,7 +19,7 @@ def _connect_mongo(host, port, username=None, password=None, db='phone-number-pr
 def save_data(collection, user_data, columns, length):
     start = time.time()
     # print(type(user_data))
-    db = _connect_mongo(host='localhost', port=27017)
+    db = connect_mongo(host='localhost', port=27017)
 
     collist = db.list_collection_names()
     if collection in collist:
@@ -58,21 +56,21 @@ def save_data(collection, user_data, columns, length):
 
 def load_data(collection):
     # 返回一个文档的所有数据
-    db = _connect_mongo(host='localhost', port=27017)
+    db = connect_mongo(host='localhost', port=27017)
     user_data = DataFrame(list(db[collection].find()))
     return user_data
 
 
 def get_complained_users(collection):
     # 返回被投诉的用户的数据
-    db = _connect_mongo(host='localhost', port=27017)
+    db = connect_mongo(host='localhost', port=27017)
     complained_users = DataFrame(list(db[collection].find({'label': 1}, {'_id': 0})))
     return complained_users
 
 
 def get_series_form_collection(collection, feature):
     # 返回某个数据集的某一列
-    db = _connect_mongo(host='localhost', port=27017)
+    db = connect_mongo(host='localhost', port=27017)
     cursor = db[collection].find({}, {'_id': 0, feature: 1})
     data = DataFrame(list(cursor))
 
@@ -80,16 +78,27 @@ def get_series_form_collection(collection, feature):
 
 
 def get_collection_info():
-    db = _connect_mongo(host='localhost', port=27017)
+    db = connect_mongo(host='localhost', port=27017)
     res = list(db[data_info].find({}, {'_id': 0}))
     return res
 
 
+def get_collection_name_list():
+    """
+    获取所有已经存在的数据库的名称
+    :return: str list
+    """
+    db = connect_mongo(host='localhost', port=27017)
+    name_dicts = list(db[data_info].find({}, {'_id': 0, 'name': 1}))
+    res = [name_dict['name'] for name_dict in name_dicts]
+    return res
+
+
 def del_data_by_collection_name(name):
-    # 应该先删除元数据
+    #  应该先删除元数据，这样的话如果元数据删除失败了，恢复数据会比较方便
 
     try:
-        db = _connect_mongo(host='localhost', port=27017)
+        db = connect_mongo(host='localhost', port=27017)
         query = {'name': name}
         temp = list(db[data_info].find(query))[0]
         db[data_info].delete_one(query)

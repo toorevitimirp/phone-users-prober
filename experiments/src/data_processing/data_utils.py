@@ -65,6 +65,14 @@ def get_clean_raw_data(features_file=None, label_file=None):
     return clean_data
 
 
+# def get_complained_users_id_real(features_file=None, label_file=None):
+#     clean_data = get_clean_raw_data(features_file=features_file, label_file=label_file)
+#     grouped = clean_data.groupby('label')
+#     group_1 = grouped.get_group(1)
+#     complained_users_id_real = group_1['user_id']
+#     return np.array(complained_users_id_real)
+
+
 def _wash_data(user_data):
     user_data.dropna(inplace=True)
 
@@ -152,6 +160,6 @@ def prepare_data_4_prediction(features_file=None, label_file=None):
     X_final = X_scaled_poly
     print('训练的特征维度：', X_final.shape[1])
 
-    users_id = raw_data['user_id']
+    users_id = np.array(raw_data['user_id'])
 
     return X_final, y, users_id

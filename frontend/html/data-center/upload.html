@@ -64,7 +64,7 @@
                     layer.confirm("用户信息文件:"+data_all[0].name+",\n被投诉用户文件:"+data_label[0].name+",\n是否上传?",
                         function(index){
                             layer.close(index);
-                            layer.msg("正在上传文件，返回前请勿关闭窗口...")
+                            layer.msg("正在上传文件，返回结果前请勿关闭窗口...")
                             var formData = new FormData($('#upload_form')[0]);
                             $.ajax({
                                 url:'http://localhost:5000/data-center/api/v1.0/data',

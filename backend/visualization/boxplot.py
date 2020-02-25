@@ -3,7 +3,7 @@ import json
 from flask import request
 from flask_cors import cross_origin
 from visualization import visual
-from etl.database import get_series_form_collection
+from etl.data_utils import get_series_form_collection
 from pandas import DataFrame
 from etl.washer import z_score
 
@@ -17,6 +17,8 @@ def box_plot():
         feature = json_data['feature']
 
         raw = get_series_form_collection(collection, feature)
+        # z_score方法的参数类型是pd.DataFrame
+        raw = DataFrame(raw, columns=[feature])
         data_norm = z_score(raw)
         desc = data_norm.describe()[feature]
         print(desc)

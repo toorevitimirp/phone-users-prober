@@ -4,7 +4,7 @@ from sklearn.model_selection import KFold
 from other.other_utils import beep
 from data_processing.data_utils import prepare_data_4_training
 from evaluation.imbalanced_evaluation import pre_rec_fscore
-from prediction.prediction import get_complained_users_id
+from prediction.prediction import predict_complained_users_id
 
 
 def linear_kernel():
@@ -18,9 +18,9 @@ def linear_kernel():
     #     prediction = clf.predict(X[test_indices])
     #     print(pre_rec_fscore(y[test_indices], prediction))
     clf.fit(X, y)
-    get_complained_users_id(clf,
-                            features_file_test='../../data/4月用户相关数据.csv',
-                            label_file_test='../../data/4月被投诉用户.csv')
+    predict_complained_users_id(clf,
+                                features_file_test='../../data/4月用户相关数据.csv',
+                                label_file_test='../../data/4月被投诉用户.csv')
     beep()
     print('done')
 

@@ -6,6 +6,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.data_utils import get_clean_raw_data, prepare_data_4_prediction
 from evaluation.imbalanced_evaluation import pre_rec_fscore
+from other_utils import beep
 
 
 def _prepare_data_4_enesemble(features_file, label_file):
@@ -33,13 +34,26 @@ def _prepare_data_4_enesemble(features_file, label_file):
 
 def ensemble(model, features_file_train, label_file_train,
              features_file_test, label_file_test):
-    X, y = _prepare_data_4_enesemble(features_file=features_file_train,label_file=label_file_train)
+    from sklearn.metrics import balanced_accuracy_score
+    from sklearn.ensemble import BaggingClassifier
+    from sklearn.tree import DecisionTreeClassifier
+    beep()
+    X_test, y_test, users_id = prepare_data_4_prediction(features_file=features_file_test,
+                                                         label_file=label_file_test)
+    X, y = _prepare_data_4_enesemble(features_file=features_file_train, label_file=label_file_train)
+    bc = BaggingClassifier(base_estimator=DecisionTreeClassifier(),
+                           random_state=0)
 
-    model.fit(X, y)
+    # model.fit(X, y)
+    # y_pred = model.predict(X_test)
+    # pre_rec_fscore(y_actual=y_test, y_predict=y_pred)
 
-    X_test, y_test, users_id = prepare_data_4_prediction(features_file=features_file_test,label_file=label_file_test)
-    y_pred = model.predict(X_test)
+    bc.fit(X, y)
+
+    y_pred = bc.predict(X_test)
+    print(balanced_accuracy_score(y_test, y_pred))
     pre_rec_fscore(y_actual=y_test, y_predict=y_pred)
+    beep()
 
 
 def main():

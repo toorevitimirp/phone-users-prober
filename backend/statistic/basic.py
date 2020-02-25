@@ -3,7 +3,7 @@ import json
 from statistic import statistic
 from flask import request
 from flask_cors import cross_origin
-from etl.database import load_data
+from etl.data_utils import load_data
 from statistic.util import process_bool_feature, process_num_feature
 
 
