@@ -18,19 +18,19 @@ def test():
     # 画图
     import matplotlib.pyplot as plt
     import numpy as np
-    x = np.linspace(0,np.pi*2,100)
+    x = np.linspace(0, np.pi*2, 100)
     y = np.sin(x)
     plt.figure()
-    plt.plot(x,y)
+    plt.plot(x, y)
     
-    #转换成base64
+    # 转换成base64
     from io import BytesIO
-    figfile = BytesIO()
-    plt.savefig(figfile, format='png')
-    figfile.seek(0)  # rewind to beginning of file
+    fig_file = BytesIO()
+    plt.savefig(fig_file, format='png')
+    fig_file.seek(0)  # rewind to beginning of file
     import base64
-    #figdata_png = base64.b64encode(figfile.read())
-    figdata_png = base64.b64encode(figfile.getvalue())
+    # figdata_png = base64.b64encode(figfile.read())
+    figdata_png = base64.b64encode(fig_file.getvalue())
     return figdata_png
     
 
