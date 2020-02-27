@@ -8,7 +8,35 @@
   <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
 </head>
 <body  class="layui-layout-body">
-    <div align="center"><h1>手机用户分析系统</h1></div>
+    <div align="center">
+      <h1>手机用户分析系统</h1>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div align="center">
+        <h2>数据上传说明 <span class="label label-info"></span></h2>
+        <div>
+              <h3>1.用户相关数据：</h3>
+              <p style="font-size:14pt;">
+                  所有用户的数据，包含'user_id','users_3w', 'twolow_users', <br>
+                  'roam_users02', 'roam_users01','vv_type', 'in16_roam_tag'<br>
+                  'roam_call_duration', 'roam_duration_02', 'mon_use_days',<br>
+                 'is_p_app_wx_times', 'zhujiao_time', 'zhujiao_times',<br>
+                 'mb5', 'mb10', 'mb30', 'mb60', 'ma60', 'total_count',<br>
+                 'beijiao_times', 'use_days', 'zhujiao', 'beijiao',<br>
+                 'zhujiao_jt', 'open', 'close', 'open_day', 'cell_num'共28列
+              </p>
+              <br>
+              <h3>2.被投诉用户信息</h3>
+              <p style="font-size:14pt;">
+                被投诉的用户的user_id，包含'user_id'一列
+              </p>
+              <br>
+              <h3>3.暂时只支持utf-8格式的csv文件</h3>
+                
+        </div>
+    </div>
 </body>
 <script src="../static/jquery/jquery.min.js"></script>
 <script src="../static/layui/layui.js" charset="utf-8"></script>

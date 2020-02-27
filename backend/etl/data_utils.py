@@ -3,14 +3,17 @@ database.py采用的方案是将用户数据存在数据库，由于数据量太
 现在采用将数据存储在csv文件中的方案
 """
 import os
+import shutil
 import time
 import pandas as pd
-from config import data_info, csv_dir
+from config import data_info, csv_dir, model_info, pkl_dir
 from api.logger import log
 from etl.database import connect_mongo, get_collection_name_list
 from api.logger import log
+from config import db_port, db_host
 
-db = connect_mongo(host='localhost', port=27017)
+
+db = connect_mongo(host=db_host, port=db_port)
 
 
 def get_collection_info():
@@ -96,6 +99,30 @@ def get_series_form_collection(collection, feature):
     return data
 
 
+def del_train_info_by_collection_name(name):
+    """
+    删除数据时，如果数据已经被训练，那么也要删除训练好的模型
+    :param name: str,数据集的名字
+    :return:
+    """
+    where = {'collection_name': name}
+    trained_models = list(db[model_info].find(where, {'_id': 0}))
+    if len(trained_models) > 0:
+        try:
+            db[model_info].delete_many(where)
+            model_file_dir = pkl_dir + name + '/'
+            shutil.rmtree(model_file_dir)
+        except BaseException as e:
+            print('exception:', e)
+            success = False
+        else:
+            success = True
+        print('success', success)
+    else:
+        success = True
+    return success
+
+
 def del_data_by_collection_name(name):
 
     try:
@@ -103,7 +130,7 @@ def del_data_by_collection_name(name):
         temp = list(db[data_info].find(query))[0]
         db[data_info].delete_one(query)
     except BaseException as e:
-        print('exception:', e)
+        print('exception 0:', e)
         res = {'result': 500, 'msg': '删除数据失败'}
         log('删除数据失败')
     else:
@@ -111,8 +138,10 @@ def del_data_by_collection_name(name):
         try:
             file_name = csv_dir + name + '.csv'
             os.remove(file_name)
+            del_train_info_by_collection_name(name)
+            log('删除数据集'+name)
         except BaseException as e:
-            print('exception', e)
+            print('exception 1', e)
             db[data_info].insert_one(temp)
             res = {'result': 500, 'msg': '删除数据失败'}
     finally:

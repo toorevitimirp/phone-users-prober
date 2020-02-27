@@ -1,29 +1,8 @@
-import common
 import numpy as np
 import pandas as pd
-from visualization.d3 import draw_3d
+
 from collections import Counter
-from data_processing.dimension_reduction import features_extraction_3d
-from other.other_utils import beep
-
-
-def _visualization_sampled_data(X_sampled, y_sampled):
-    X_3d = features_extraction_3d(X_sampled)
-
-    df = pd.DataFrame(X_3d)
-    df['label'] = pd.Series(y_sampled)
-    grouped = df.groupby('label')
-
-    data_1 = grouped.get_group(1)
-    data_0 = grouped.get_group(0)
-
-    pos1 = data_1.drop(labels='label', axis=1)
-    pos0 = data_0.drop(labels='label', axis=1)
-
-    pos0 = np.array(pos0)
-    pos1 = np.array(pos1)
-
-    draw_3d(pos0, pos1)
+from etl.dimension_reduction import features_extraction_3d
 
 
 def _random_over_sample(X, y):
@@ -46,12 +25,11 @@ def _smote(X, y):
 
 
 def _adasyn(X, y):
-    beep() # 时间很长
+    # 时间很长
     from imblearn.over_sampling import ADASYN
     print(Counter(y))
     X_sampled, y_sampled = ADASYN().fit_sample(X, y)
     print(Counter(y_sampled))
-    beep()
     return X_sampled, y_sampled
 
 
@@ -174,27 +152,14 @@ def imbalanced_handle(X, y):
     :param y: m×1的np.ndarray, 标签
     :return: X:r×n的np.ndarray y:r×1的np.ndarray
     """
-    X_sampled, y_sampled = _smoteenn(X, y)
+    # X_sampled, y_sampled = _smoteenn(X, y)
     # X_sampled, y_sampled = _iht(X, y)
     # X_sampled, y_sampled = _tomek_links(X, y)
     # X_sampled, y_sampled = _near_miss(X, y)
     # X_sampled, y_sampled = _random_under_sample(X, y)
     # X_sampled, y_sampled = _smote(X, y)
     # X_sampled, y_sampled = _adasyn(X, y)
-    # X_sampled, y_sampled = _random_over_sample(X, y)
+    X_sampled, y_sampled = _random_over_sample(X, y)
     # X_sampled, y_sampled = X, y
     return X_sampled, y_sampled
 
-
-def main():
-    from data_processing.data_utils import get_clean_raw_data, num_features
-    raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
-                                  label_file='../../data/3月被投诉用户.csv')
-    X = np.array(raw_data[num_features])
-    y = np.array(raw_data['label'])
-    X_sampled, y_sampled = imbalanced_handle(X, y)
-    _visualization_sampled_data(X_sampled, y_sampled)
-
-
-if __name__ == '__main__':
-    main()

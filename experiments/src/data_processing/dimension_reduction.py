@@ -9,7 +9,7 @@ from visualization.d3 import pca_visual
 
 
 def variance_threshold(X, p):
-    """移除那些在整个数据集中特征值为0或者为1的比例超过p的特征。
+    """移除那些在整个数据集中特征值为0或者为1的比例超过p的特征。试验性函数。
     :param X: 待选择的数据集
     :param p: 阈值
     :return: 选择后的数据集
@@ -23,6 +23,9 @@ def variance_threshold(X, p):
 
 
 def feature_selection():
+    """
+    特征选择，试验性函数。
+    """
     from data_processing.data_utils import get_clean_raw_data, bool_features, num_features
     raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
                                   label_file='../../data/3月被投诉用户.csv')
@@ -36,6 +39,11 @@ def feature_selection():
 
 
 def pca_num_feature(X):
+    """
+    pca降维
+    :param X: m×n的np.ndarray, 特征集
+    :return: m×3的np.ndarray, 降维后的特征集
+    """
     print('降维前：{}'.format(X.shape))
     pca = PCA(n_components=0.99)
     pca.fit(X)
@@ -53,8 +61,9 @@ def pca_num_feature(X):
 
 def features_extraction_3d(X):
     """
-    :param X: 特征集，m×n
-    :return:
+    pca降维
+    :param X: m×n的np.ndarray, 特征集
+    :return: m×3的np.ndarray, 降维后的特征集
     """
     # raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
     #                               label_file='../../data/3月被投诉用户.csv')
