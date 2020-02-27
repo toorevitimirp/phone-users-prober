@@ -7,9 +7,8 @@ import shutil
 import time
 import pandas as pd
 from config import data_info, csv_dir, model_info, pkl_dir
-from api.logger import log
 from etl.database import connect_mongo, get_collection_name_list
-from api.logger import log
+from logger.logger import log
 from config import db_port, db_host
 
 
@@ -117,7 +116,7 @@ def del_train_info_by_collection_name(name):
             success = False
         else:
             success = True
-        print('success', success)
+        print('删除训练模型：', success)
     else:
         success = True
     return success
@@ -146,4 +145,58 @@ def del_data_by_collection_name(name):
             res = {'result': 500, 'msg': '删除数据失败'}
     finally:
         return res
+
+
+def get_train_info_by_model_collection(model, collection):
+    """
+    根据模型名称和数据集名称获取训练信息
+    :param model: str,模型名称
+    :param collection:str,数据集名称
+    :return: dict
+    """
+    # db = connect_mongo(host='localhost', port=27017)
+    query = {'model_name': model, 'collection_name': collection}
+    res = list(db[model_info].find(query, {'_id': 0}))[0]
+    return res
+
+
+def is_trained_model_collection(model_name, collection):
+    """
+    查询是否已经存在由某个模型（model_name）训练的数据集（collection）
+    :param model_name: str，模型名称
+    :param collection: str，数据集名称
+    :return: bool，是否已经训练
+    """
+    # db = connect_mongo(host='localhost', port=27017)
+    query = {'model_name': model_name, 'collection_name': collection}
+    li = list(db[model_info].find(query, {'_id': 0}))
+    trained = not (len(li) == 0)
+    return trained
+
+
+def get_train_info_by_model(model):
+    """
+    根据模型名称获取所有训练信息
+    :param model: str,模型名称
+    :return: dict list
+    """
+    # db = connect_mongo(host='localhost', port=27017)
+    query = {'model_name': model}
+    res = db[model_info].find(query, {'_id': 0})
+    return list(res)
+
+
+def update_data_trained(collection, flag):
+    """
+    更新data-info中某数据集（collection）的trained为1
+    :param flag: 0 or 1
+    :param collection: str 数据集的名称
+    :return:
+    """
+    where = {"name": collection}
+    update = {"$set": {"trained": flag}}
+    # db = connect_mongo(host='localhost', port=27017)
+    res = db[data_info].update_one(where, update)
+
+
 

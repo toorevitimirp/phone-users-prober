@@ -4,7 +4,7 @@ import os
 import pymongo
 import time
 from pandas import DataFrame
-from api.logger import log
+from logger.logger import log
 from config import data_info, model_info, db_host, db_port, pkl_dir
 
 

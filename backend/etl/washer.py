@@ -4,6 +4,7 @@ import numpy as np
 from sklearn import preprocessing
 from pandas import DataFrame
 from time import time
+from logger.logger import log
 
 
 def z_score(data):
@@ -60,8 +61,8 @@ def wash_data(user_data):
                 i += 1
     user_data.drop(del_list, inplace=True)
     end = time()
-    api.logger.log("去掉的行数: " + str(len(del_list)))
-    api.logger.log("清洗数据所用时间：" + str(end - start))
+    log("去掉的行数: " + str(len(del_list)))
+    log("清洗数据所用时间：" + str(end - start))
     return user_data
 
 # def get_data(collection):

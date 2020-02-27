@@ -5,7 +5,7 @@ from etl.data_processing import prepare_data_4_training
 from config import pkl_dir
 from etl.database import connect_mongo, update_data_trained
 from config import model_info
-from api.logger import log
+from logger.logger import log
 import time
 import joblib
 
@@ -16,7 +16,7 @@ models = ['sgd']
 def _save_model(model, model_name, collection, cost_time, date):
 
     # 保存训练信息到数据库
-    model_file_name = collection + '_' + model_name + date + '.pkl'
+    model_file_name = collection + '_' + model_name + '_' + date + '.pkl'
     db = connect_mongo(host='localhost', port=27017)
     trained_one = {
         "collection_name": collection,
@@ -25,6 +25,9 @@ def _save_model(model, model_name, collection, cost_time, date):
         "cost_time": cost_time,
         "date": date
     }
+    # 记录到日志
+    log('训练数据：' + str(trained_one))
+
     db[model_info].insert_one(trained_one)
 
     # 更新data-info数据库
@@ -36,9 +39,6 @@ def _save_model(model, model_name, collection, cost_time, date):
         os.mkdir(file_dir)
     model_file_name = file_dir + model_file_name
     joblib.dump(model, model_file_name)
-
-    # 记录到日志
-    log('训练数据：' + str(trained_one))
 
 
 def sgd_classifier(collection):

@@ -2,8 +2,9 @@ from flask import Flask
 from flask_cors import cross_origin
 
 app = Flask(__name__)
+
 # 日志
-from api.logger import log
+from logger.logger import log
 
 # 注册路由
 import api.route
