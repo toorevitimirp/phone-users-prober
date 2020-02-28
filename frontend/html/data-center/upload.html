@@ -66,6 +66,7 @@
                             layer.close(index);
                             layer.msg("正在上传文件，返回结果前请勿关闭窗口...")
                             var formData = new FormData($('#upload_form')[0]);
+                            // console.log(formData)
                             $.ajax({
                                 url:'http://localhost:5000/data-center/api/v1.0/data',
                                 type:'post',
@@ -76,7 +77,6 @@
                                 success:function(res){
                                     var res = JSON.stringify(res['msg'])
                                     var iframe = window.parent.opener.document
-                                    console.log(iframe)
                                     alert(res)
                                     
                                     // console.log(res)

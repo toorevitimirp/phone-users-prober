@@ -19,7 +19,7 @@ def post_data():
         if collection == data_info or collection == model_info:
             return {'result': 500, 'msg': '上传失败，数据集合名称不符合规范'}
 
-        # 将csv文件转换为标准的数据格式，保护features，label
+        # 将csv文件转换为标准的数据格式，保存features，label
         user_data = pd.read_csv(request.files["data_all"], encoding='utf-8')
         complain_users = pd.read_csv(request.files["data_label"], encoding='utf-8')["user_id"]
         all_users_id = user_data["user_id"]

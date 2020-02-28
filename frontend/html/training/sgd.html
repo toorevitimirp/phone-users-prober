@@ -45,10 +45,13 @@
             ,cols: [[ //表头
             ,{field: 'id', title: '',}
             ,{field: 'name', title: '数据集',}
+            ,{field: 'precision', title: 'precision', sort: false}
+            ,{field: 'recall', title: 'recall', sort: false}
+            ,{field: 'f1_score', title: 'f1_score', sort: false}
             ,{field: 'length', title: '数据长度',  sort: true}
-            ,{field: 'trained', title: '已训练', sort: true}
-            ,{field: 'cost_time', title: '训练时间', sort: true}
+            ,{field: 'cost_time', title: '花费时间', sort: true}
             ,{field: 'date', title: '日期', sort: false}
+            // ,{field: 'trained', title: '已训练', sort: true}
             ,{fixed: 'right', title:'操作', align:'center', toolbar: '#toolbar'} 
             ]]
         });

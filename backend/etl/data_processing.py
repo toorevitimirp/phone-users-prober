@@ -60,8 +60,7 @@ def prepare_data_4_prediction(collection):
     """
     降维，feature scaling，升维，获得模型能够直接用的数据
     预测不需要处理imbalanced data，所以要和prepare_data_4_training分开
-    :param features_file:
-    :param label_file:
+    :param collection: 数据集名称
     :return:
     """
     raw_data = load_data(collection)
