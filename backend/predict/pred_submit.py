@@ -14,36 +14,29 @@ from predict.models import pred_complained_users
 @cross_origin()
 def pred_submit():
     if request.method == 'POST':
-        collection_trained = request.values['collection']
-        model = request.values['model']
+        trained_collection_name = request.values['collection']
+        model_name = request.values['model']
 
         # 将csv文件转换为标准的数据格式，保护features
         user_data = pd.read_csv(request.files["data_all"], encoding='utf-8')
-        all_users_id = user_data["user_id"]
+        # all_users_id = user_data["user_id"]
 
         # 清洗数据
-        clean_data = wash_data(user_data)
-        print(clean_data)
-        print(collection_trained)
-        print(model)
-        # data = request.get_data()
-        # json_data = json.loads(data.decode('utf-8'))
-        # model_name = json_data['model']
-        # trained_col = json_data['trained']
-        # pred = json_data['pred']
-        #
-        # if model_name == 'sgd':
-        #     is_trained = is_trained_model_collection(model_name=model_name,
-        #                                              collection=trained_col)
-        #     if not is_trained:
-        #         res = {'result': 0, 'msg': '该数据集未训练！'}
-        #     else:
-        #         data = pred_complained_users(trained_col, pred, model_name)
-        #
-        #         res = {'result': 1, 'msg': '返回成功', 'data': data}
-        # else:
-        #     res = {'result': 0, 'msg': '模型名错误'}
-        #
-        # return res
-        data = [{'feature': 'fuck'}, {'feature': 'fuck'}]
-        return {'result': 0, 'data': data}
+        X_pred = wash_data(user_data)
+        print(X_pred)
+        print(trained_collection_name)
+        print(model_name)
+
+        if model_name == 'sgd':
+            is_trained = is_trained_model_collection(model_name=model_name,
+                                                     collection=trained_collection_name)
+            if not is_trained:
+                res = {'result': 0, 'msg': '该数据集未训练！'}
+            else:
+                complained_users = pred_complained_users(trained_collection_name, X_pred, model_name)
+                complained_users_dict = complained_users.to_json(orient='records')
+                res = {'result': 1, 'msg': '返回成功', 'data': complained_users_dict}
+        else:
+            res = {'result': 0, 'msg': '模型名错误'}
+
+        return res

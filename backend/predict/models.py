@@ -1,8 +1,7 @@
 import joblib
-
+import numpy as np
 from config import pkl_dir
 from etl.data_processing import prepare_data_4_prediction
-from evaluation.imbalanced_evaluation import pre_rec_fscore
 
 
 def _load_model(collection, model_name):
@@ -13,15 +12,17 @@ def _load_model(collection, model_name):
     return model
 
 
-def pred_complained_users(trained, pred, model_name):
+def pred_complained_users(trained_collection_name, X_pred, model_name):
     """
-    :param trained: 训练集
-    :param pred: 测试集
+    :param X_pred: 预测数据
+    :param trained_collection_name: 训练集名称
     :param model_name: 模型名称
-    :return:
+    :return:pandas.DataFrame
     """
-    model = _load_model(collection=trained, model_name=model_name)
-    X, y, _ = prepare_data_4_prediction(pred)
+    model = _load_model(collection=trained_collection_name, model_name=model_name)
+    X = prepare_data_4_prediction(X_pred)
     y_pred = model.predict(X)
-    eva = pre_rec_fscore(y_actual=y, y_predict=y_pred)
-    return eva
+    # indices_complained_users = np.where(y_pred == 1)
+    X_pred['labels'] = y_pred
+    complained_users = X_pred[(X_pred['labels'] == 1)]
+    return complained_users

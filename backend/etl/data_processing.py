@@ -56,16 +56,42 @@ def prepare_data_4_training(collection):
     return X_final, y
 
 
-def prepare_data_4_prediction(collection):
+# def prepare_data_4_prediction(collection):
+#     """
+#     降维，feature scaling，升维，获得模型能够直接用的数据
+#     预测不需要处理imbalanced data，所以要和prepare_data_4_training分开
+#     :param collection: 数据集名称
+#     :return:
+#     """
+#     raw_data = load_data(collection)
+#     X = np.array(raw_data[num_features])
+#     y = np.array(raw_data['label'])
+#     print('原始特征维度：', X.shape[1])
+#
+#     # 降维
+#     X_extract = features_extraction_3d(X)
+#
+#     # feature scaling -> 升维 -> feature scaling
+#     X_scaled = preprocessing.scale(X_extract)
+#     poly = PolynomialFeatures(degree=3)
+#     X_poly = poly.fit_transform(X_scaled)
+#     X_scaled_poly = preprocessing.scale(X_poly)
+#
+#     X_final = X_scaled_poly
+#     print('训练的特征维度：', X_final.shape[1])
+#
+#     users_id = np.array(raw_data['user_id'])
+#
+#     return X_final, y, users_id
+def prepare_data_4_prediction(X_pred):
     """
     降维，feature scaling，升维，获得模型能够直接用的数据
     预测不需要处理imbalanced data，所以要和prepare_data_4_training分开
-    :param collection: 数据集名称
-    :return:
+    :param X_pred: 待预测的数据集
+    :return:np.ndarray
     """
-    raw_data = load_data(collection)
-    X = np.array(raw_data[num_features])
-    y = np.array(raw_data['label'])
+
+    X = np.array(X_pred[num_features])
     print('原始特征维度：', X.shape[1])
 
     # 降维
@@ -80,6 +106,4 @@ def prepare_data_4_prediction(collection):
     X_final = X_scaled_poly
     print('训练的特征维度：', X_final.shape[1])
 
-    users_id = np.array(raw_data['user_id'])
-
-    return X_final, y, users_id
+    return X_final

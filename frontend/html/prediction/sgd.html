@@ -83,7 +83,7 @@
                                 processData: false,
                                 contentType: false,
                                 success:function(res){
-                                    console.log(res)
+                                    console.log(res.data)
                                     // var res = JSON.stringify(res['msg'])
                                     layui.use('table', function(){
                                     var table = layui.table;
@@ -94,9 +94,35 @@
                                         ,height:height
                                         ,page: true 
                                         ,cols: [[ //标题栏
-                                        {field: 'feature', title: '特征',width:100}
+                                        {field: 'user_id', title: 'user_id',}
+                                        // ,{field: 'users_3w', title: 'users_3w',}
+                                        // ,{field: 'twolow_users', title: 'twolow_users',  sort: true}
+                                        // ,{field: 'roam_users02', title: 'roam_users02'}
+                                        ,{field: 'roam_call_duration', title: 'roam_call_duration', sort: true}
+                                        // ,{field: 'roam_users01', title: 'roam_users01'}
+                                        // ,{field: 'roam_duration_02', title: 'mon_use_days', sort: true}
+                                        ,{field: 'is_p_app_wx_times', title: 'is_p_app_wx_times', sort: true}
+                                        // ,{field: 'vv_type', title: 'vv_type'}
+                                        ,{field: 'in16_roam_tag', title: 'in16_roam_tag'}
+                                        ,{field: 'zhujiao_time', title: 'zhujiao_time', sort: true}
+                                        ,{field: 'zhujiao_times', title: 'zhujiao_times', sort: true}
+                                        ,{field: 'mb5', title: 'mb5', sort: true}
+                                        ,{field: 'mb10', title: 'mb10', sort: true}
+                                        ,{field: 'mb30', title: 'mb30', sort: true}
+                                        ,{field: 'mb60', title: 'mb60', sort: true}
+                                        ,{field: 'ma60', title: 'ma60', sort: true}
+                                        ,{field: 'total_count', title: 'total_count', sort: true}
+                                        ,{field: 'beijiao_times', title: 'beijiao_times', sort: true}
+                                        ,{field: 'use_days', title: 'use_days', sort: true}
+                                        ,{field: 'zhujiao', title: 'zhujiao', sort: true}
+                                        ,{field: 'beijiao', title: 'beijiao', sort: true}
+                                        ,{field: 'zhujiao_jt', title: 'zhujiao_jt', sort: true}
+                                        ,{field: 'open', title: 'open', sort: true}
+                                        ,{field: 'close', title: 'close', sort: true}
+                                        ,{field: 'open_day', title: 'open_day', sort: true}
+                                        ,{field: 'cell_num', title: 'cell_num', sort: true}
                                         ]]
-                                        ,data: res.data
+                                        ,data: JSON.parse(res.data)
                                         //,skin: 'line' //表格风格
                                         ,even: true
                                         //,page: true //是否显示分页
