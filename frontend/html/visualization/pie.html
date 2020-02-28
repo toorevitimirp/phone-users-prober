@@ -9,14 +9,14 @@
 </head>
 <body  class="container">
     <form class="layui-form layui-row" action="">
-        <div class="layui-form-item ">
+        <div class="layui-form-item layui-col-md6 layui-col-md-offset3">
             <label class="layui-form-label">数据集</label>
             <div class="layui-input-block">
                 <select id="select" class="form-control input-sm" name="category" lay-filter="category" aria-invalid="false">
                 </select>
             </div>
         </div>      
-        <div class="layui-form-item">
+        <div class="layui-form-item layui-col-md6 layui-col-md-offset3">
                 <label class="layui-form-label">特征</label>
                 <div class="layui-input-block">
                         <select id="features" class="form-control input-sm" lay-filter="feature" aria-invalid="false">
@@ -31,7 +31,7 @@
         </div>
         
      </form>
-     <button class="btn btn-default  layui-col-md-offset1" onclick="plot_pie()">确定</button>
+     <button class="btn btn-default  layui-col-md-offset4" onclick="plot_pie()">确定</button>
      <!-- <button class="btn btn-default  layui-col-md-offset1" onclick="get_data()">test</button> -->
      
      <center id="container"></center>
