@@ -17,7 +17,6 @@ from evaluation.imbalanced_evaluation import pre_rec_fscore
 def predict_complained_users_id(model,
                                 features_file_test=None,
                                 label_file_test=None):
-
     X_test, y_test, users_id = prepare_data_4_prediction(
         features_file=features_file_test,
         label_file=label_file_test
@@ -50,4 +49,20 @@ def predict_complained_users_id(model,
     # print('1类数量：{}'.format(len(complained_users_id)))
 
     # return complained_users_id
+
+
+def threshold_pred(model,
+                   threshold=0.5,
+                   X=None,
+                   y=None):
+
+    pre_probas = model.predict_proba(X)
+
+    y_pre_threshold = np.zeros(y.shape).astype('int')
+    #
+    for i, proba in enumerate(pre_probas):
+        if proba[1] > threshold:
+            y_pre_threshold[i] = 1
+    #
+    pre_rec_fscore(y_actual=y, y_predict=y_pre_threshold)
 
