@@ -1,0 +1,43 @@
+version: "3"
+services:
+  mongo:
+    build: ./mongo
+    #volumes:
+      #- "./mongo/db:/data/db"
+    #restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./mongo/db:/data/db"
+      - "/etc/localtime:/etc/localtime"
+    networks:
+      extnetwork:
+        ipv4_address: "172.19.0.2"
+  flask:
+    build: ./backend
+    links:
+      - mongo
+    ports:
+      - "5000:5000"
+    networks:
+      extnetwork:
+        ipv4_address: "172.19.0.3"
+  nginx:
+    image: nginx:alpine
+    links:
+     - flask
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/www:/usr/share/nginx/html/
+      - ./frontend/conf/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      extnetwork:
+        ipv4_address: "172.19.0.4"
+
+networks:
+  extnetwork:
+    ipam:
+      config:
+      - subnet: "172.19.0.0/16"
+        #gateway: "172.19.0.1"
