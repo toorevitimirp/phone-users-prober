@@ -19,7 +19,7 @@ def _save_model(model, trained_info):
     # 保存训练信息到数据库
     collection = trained_info['collection_name']
     model_file_name = trained_info['pkl_name']
-    db = connect_mongo(host=db_host, port=db_host)
+    db = connect_mongo(host=db_host, port=db_port)
     db[model_info].insert_one(trained_info)
 
     # 记录到日志
