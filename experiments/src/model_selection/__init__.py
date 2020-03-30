@@ -5,7 +5,7 @@ from imblearn.over_sampling import RandomOverSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import KFold, cross_val_score, RandomizedSearchCV
 
-from evaluation.imbalanced_evaluation import pre_rec_fscore
+from evaluation.imbalanced_evaluation import fscore
 from other.other_utils import beep
 from data_processing.data_utils import prepare_data_4_training, prepare_data_4_prediction
 import prediction.prediction as pre

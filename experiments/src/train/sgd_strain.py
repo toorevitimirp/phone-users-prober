@@ -5,7 +5,7 @@ from imblearn.over_sampling import RandomOverSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import KFold, cross_val_score, RandomizedSearchCV
 
-from evaluation.imbalanced_evaluation import pre_rec_fscore
+from evaluation.imbalanced_evaluation import fscore, roc_auc
 from other.other_utils import beep
 from data_processing.data_utils import prepare_data_4_training, prepare_data_4_prediction
 import prediction.prediction as pre
@@ -23,13 +23,17 @@ def sgd():
 
     clf.fit(X_train, y_train)
 
-    y_pred_train = clf.predict(X_train)
+    y_score_train = clf.predict_proba(X_train)
+    y_score_test = clf.predict_proba(X_test)
+
     y_pred_test = clf.predict(X_test)
-
-    pre.threshold_pred(model=clf, threshold=0.3, X=X_train, y=y_train)
-    # eva_train = pre_rec_fscore(y_actual=y_train, y_predict=y_pred_train)
-
-    pre.threshold_pred(model=clf, threshold=0.6, X=X_test, y=y_test)
+    fscore(y_actual=y_test, y_predict=y_pred_test)
+    roc_auc(y_actual=y_train, y_score=y_score_train[:, 1])
+    roc_auc(y_actual=y_test, y_score=y_score_test[:, 1])
+    # pre.threshold_pred(model=clf, threshold=0.3, X=X_train, y=y_train)
+    # # eva_train = pre_rec_fscore(y_actual=y_train, y_predict=y_pred_train)
+    #
+    # pre.threshold_pred(model=clf, threshold=0.6, X=X_test, y=y_test)
     # eva_test = pre_rec_fscore(y_actual=y_test, y_predict=y_pred_test)
 
     # pre.predict_complained_users_id(clf,

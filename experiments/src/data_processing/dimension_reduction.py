@@ -2,10 +2,8 @@
 特征选择,特征提取
 """
 import common
-import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.decomposition import PCA
-from visualization.d3 import pca_visual
 
 
 def variance_threshold(X, p):

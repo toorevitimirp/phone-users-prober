@@ -1,29 +1,10 @@
 import common
 import numpy as np
-import pandas as pd
-from visualization.d3 import draw_3d
 from collections import Counter
+
 from data_processing.dimension_reduction import features_extraction_3d
 from other.other_utils import beep
-
-
-def _visualization_sampled_data(X_sampled, y_sampled):
-    X_3d = features_extraction_3d(X_sampled)
-
-    df = pd.DataFrame(X_3d)
-    df['label'] = pd.Series(y_sampled)
-    grouped = df.groupby('label')
-
-    data_1 = grouped.get_group(1)
-    data_0 = grouped.get_group(0)
-
-    pos1 = data_1.drop(labels='label', axis=1)
-    pos0 = data_0.drop(labels='label', axis=1)
-
-    pos0 = np.array(pos0)
-    pos1 = np.array(pos1)
-
-    draw_3d(pos0, pos1)
+from visualization.sampled_data import visualization_sampled_data
 
 
 def _random_over_sample(X, y):
@@ -193,7 +174,8 @@ def main():
     X = np.array(raw_data[num_features])
     y = np.array(raw_data['label'])
     X_sampled, y_sampled = imbalanced_handle(X, y)
-    _visualization_sampled_data(X_sampled, y_sampled)
+    X_3d = features_extraction_3d(X_sampled)
+    visualization_sampled_data(X_3d, y_sampled)
 
 
 if __name__ == '__main__':

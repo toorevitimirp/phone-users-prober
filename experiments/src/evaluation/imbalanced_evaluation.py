@@ -1,8 +1,10 @@
 import common
 import json
+from sklearn import metrics
+import matplotlib.pyplot as plt
 
 
-def pre_rec_fscore(y_actual, y_predict):
+def fscore(y_actual, y_predict):
     true_pos = true_neg = false_pos = false_neg = 0
     for y, y_hat in zip(y_actual, y_predict):
         if y == 1:
@@ -49,3 +51,17 @@ def pre_rec_fscore(y_actual, y_predict):
     print(json.dumps(evaluation, indent=4, ensure_ascii=False))
     print(json.dumps(evaluation_detail, indent=4, ensure_ascii=False))
     return evaluation
+
+
+def roc_auc(y_actual, y_score):
+    fpr, tpr, thresholds = metrics.roc_curve(y_true=y_actual, y_score=y_score)
+    plt.xlabel('fpr')
+    plt.ylabel('tpr')
+    plt.plot(fpr, tpr)
+    plt.show()
+    auc = metrics.auc(fpr, tpr)
+    print(thresholds)
+    print('auc:{}'.format(auc))
+    return auc
+
+

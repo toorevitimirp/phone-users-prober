@@ -128,7 +128,7 @@ def prepare_data_4_training(features_file=None, label_file=None):
     X_final = X_scaled_poly
     print('训练的特征维度：', X_final.shape[1])
 
-    users_id = raw_data['user_id']
+    # users_id = raw_data['user_id']
 
     return X_final, y
 

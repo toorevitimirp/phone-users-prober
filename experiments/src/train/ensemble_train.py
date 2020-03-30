@@ -5,7 +5,7 @@ from sklearn import preprocessing
 from sklearn.preprocessing import PolynomialFeatures
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.data_utils import get_clean_raw_data, prepare_data_4_prediction
-from evaluation.imbalanced_evaluation import pre_rec_fscore
+from evaluation.imbalanced_evaluation import fscore
 from other_utils import beep
 
 
@@ -52,7 +52,7 @@ def ensemble(model, features_file_train, label_file_train,
 
     y_pred = bc.predict(X_test)
     print(balanced_accuracy_score(y_test, y_pred))
-    pre_rec_fscore(y_actual=y_test, y_predict=y_pred)
+    fscore(y_actual=y_test, y_predict=y_pred)
     beep()
 
 

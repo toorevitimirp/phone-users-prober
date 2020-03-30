@@ -61,8 +61,8 @@ def draw_3d(pos0, pos1):
 def pca_visual(X_pca, label):
     """
     pca降维后可视化
-    :param X_pca:
-    :param label:
+    :param X_pca: m*3 的numpy.ndarray, 特征集
+    :param label:m*1的numpy.ndarray,标签
     :return:
     """
     data_all = DataFrame(X_pca)
@@ -84,3 +84,5 @@ def pca_visual(X_pca, label):
     # plt.show()
     # draw_3d 渲染速度快，但是效果非常不好
     draw_3d(pos0, pos1)
+
+

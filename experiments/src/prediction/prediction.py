@@ -11,7 +11,7 @@ import pandas as pd
 #     # print(complained_users_id)
 #     return complained_users_id
 from data_processing.data_utils import prepare_data_4_prediction
-from evaluation.imbalanced_evaluation import pre_rec_fscore
+from evaluation.imbalanced_evaluation import fscore
 
 
 def predict_complained_users_id(model,
@@ -39,7 +39,7 @@ def predict_complained_users_id(model,
             y_pre_my[i] = 1
     print(y_pre_my)
     #
-    pre_rec_fscore(y_test, y_pre_my)
+    fscore(y_test, y_pre_my)
     # print(pre_proba)
     # y_test_prediction = model.predict(X_test)
     # users_id = np.array(users_id)
@@ -64,5 +64,5 @@ def threshold_pred(model,
         if proba[1] > threshold:
             y_pre_threshold[i] = 1
     #
-    pre_rec_fscore(y_actual=y, y_predict=y_pre_threshold)
+    fscore(y_actual=y, y_predict=y_pre_threshold)
 

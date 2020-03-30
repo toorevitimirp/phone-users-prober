@@ -3,7 +3,7 @@ from sklearn.svm import LinearSVC
 from sklearn.model_selection import KFold
 from other.other_utils import beep
 from data_processing.data_utils import prepare_data_4_training
-from evaluation.imbalanced_evaluation import pre_rec_fscore
+from evaluation.imbalanced_evaluation import fscore
 from prediction.prediction import predict_complained_users_id
 
 

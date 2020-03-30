@@ -220,10 +220,13 @@ def hist_plot_all():
     data = get_clean_raw_data(features_file=features, label_file=label)
     for col in num_features:
         plt.figure()
-        plt.hist(np.array(data[col]))
+        x = np.array(data[col])
+        # x = np.sqrt(x)
+        # plt.hist(np.sqrt(x), bins=300, log=True)
+        plt.hist(x, bins=300, log=True)
         plt.title(col)
-        # plt.show()
-        plt.savefig('../notes/image/hist-all/' + col)
+        plt.show()
+        # plt.savefig('../notes/image/hist-all/' + col)
 
 
 def hist_plot_0vs1():
@@ -237,11 +240,15 @@ def hist_plot_0vs1():
         plt.suptitle(col, fontsize=14)
 
         plt.subplot(211)
-        label0_df[col].plot(kind='hist')
+        x = np.array(label0_df[col])
+        plt.hist(np.sqrt(x), bins=300, log=True)
+        # label0_df[col].plot(kind='hist')
         plt.xlabel('label=0')
 
         plt.subplot(212)
-        label1_df[col].plot(kind='hist')
+        x = np.array(label1_df[col])
+        plt.hist(np.sqrt(x), bins=30, log=True, color='r')
+        # label1_df[col].plot(kind='hist')
         plt.xlabel('label=1')
 
         plt.show()
@@ -310,7 +317,7 @@ def kde_open_wxtimes_close_cell_num_0vs1():
 
 
 def main():
-    hist_plot_0vs1()
+    hist_plot_all()
 
 
 if __name__ == '__main__':
