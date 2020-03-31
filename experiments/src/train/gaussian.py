@@ -1,5 +1,8 @@
 import numpy as np
+from sklearn import preprocessing
+from sklearn.preprocessing import PolynomialFeatures
 
+from visualization.d3 import draw_3d
 from data_processing.data_utils import get_clean_raw_data, num_features
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
@@ -44,17 +47,35 @@ def _prepare_data_4_prediction(features_file=None, label_file=None):
     # 降维
     X_extract = features_extraction_3d(X)
 
-    X_final = X_extract
+    X_scaled = preprocessing.scale(X_extract)
 
     users_id = np.array(raw_data['user_id'])
+
+    X_final = X_scaled
     return X_final, y, users_id
+
+
+def inspect():
+    X, y, users_id = _prepare_data_4_prediction(features_file='../../data/4月用户相关数据.csv',
+                                                label_file='../../data/4月被投诉用户.csv')
+
+    X_anomal = X[np.where(y == 1)]
+    X_normal = X[np.where(y == 0)]
+    # print(np.max(X_anomal))
+    # print(np.max(X_normal))
+    #
+    # print(np.min(X_anomal))
+    # print(np.min(X_normal))
+    print(np.shape(X_normal))
+    print(X_anomal)
+    draw_3d(X_normal, X_anomal)
 
 
 def anomaly_detection():
     X_train, y_train = _prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
                                                 label_file='../../data/3月被投诉用户.csv')
     X_test, y_test, _ = _prepare_data_4_prediction(features_file='../../data/4月用户相关数据.csv',
-                                                          label_file='../../data/4月被投诉用户.csv')
+                                                   label_file='../../data/4月被投诉用户.csv')
     m_train, n = np.shape(X_train)
     mu = np.sum(X_train, 0) / m_train
     delta = X_train - mu
@@ -81,7 +102,7 @@ def anomaly_detection():
 
 
 def main():
-    anomaly_detection()
+    inspect()
 
 
 if __name__ == '__main__':

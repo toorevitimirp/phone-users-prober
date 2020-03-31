@@ -13,16 +13,19 @@ def fscore(y_actual, y_predict):
             elif y_hat == 0:
                 false_neg += 1
             else:
-                print('预测值非0,1')
+                print('1,预测值非0,1')
+                print(y_hat)
         elif y == 0:
             if y_hat == 1:
                 false_pos += 1
             elif y_hat == 0:
                 true_neg += 1
             else:
-                print('预测值非0,1')
+                print('2,预测值非0,1')
+                print(y_hat)
         else:
-            print('预测值非0,1')
+            print('3,预测值非0,1')
+            print(y)
     try:
         precision = true_pos / (true_pos + false_pos)
     except ZeroDivisionError as e:
