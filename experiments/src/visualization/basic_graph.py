@@ -33,7 +33,7 @@ def bool_feature_distribution():
         # plt.show()
 
 
-def num_scatter_all():
+def num_scatter_all_magnifier():
     """
     数值型特征之间的二维散点图，包含0和1类
     :return:
@@ -44,11 +44,60 @@ def num_scatter_all():
     label1_df = grouped.get_group(1)
     label0_df = grouped.get_group(0)
     count = 0
+    feature = ['beijiao_times', 'zhujiao_jt']
+    for ind in range(100):
+        for i, f1 in enumerate(feature):
+            for f2 in feature[i + 1:]:
+                label0_x = label0_df[f1]
+                label0_y = label0_df[f2]
+                label1_x = label1_df[f1]
+                label1_y = label1_df[f2]
+                fig, ax = plt.subplots()
+                index = label1_df[f1].index
+                view_point_x = label1_df[f1][index[ind]]
+                view_point_y = label1_df[f2][index[ind]]
+                print(f1, f2)
+                print(view_point_x, view_point_y)
+                view_scope_x = 10
+                view_scope_y = 10
+                ax.set_xlim(view_point_x - view_scope_x, view_point_x + view_scope_x)
+                ax.set_ylim(view_point_y - view_scope_y, view_point_y + view_scope_y)
+
+                ax.scatter(x=label0_x, y=label0_y, color='b', marker='x', label='label=0')
+                ax.scatter(x=label1_x, y=label1_y, color='r', marker='+', label='label=1')
+                ax.set_xlabel(f1)
+                ax.set_ylabel(f2)
+                ax.legend()
+                plt.show()
+                # ax = label0_df.plot.scatter(x=x1, y=x2, color='b', marker='x', label='label=0')
+                # label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1', ax=ax)
+                # plt.show()
+                # plt.savefig('../notes/image/scatter-all/' + x1 + '--' + x2)
+                # plt.savefig('../../notes/image/scatter-all-no-outlier/' + x1 + '--' + x2)
+                count += 1
+                print(count)
+    print('done')
+    print('all:', count)
+
+
+def num_scatter_all():
+    """
+    数值型特征之间的二维散点图，包含0和1类
+    :return:
+    """
+    data_all = get_clean_raw_data(features_file=features, label_file=label)
+    print(data_all.shape)
+    grouped = data_all.groupby('label')
+    label1_df = grouped.get_group(1)
+    label0_df = grouped.get_group(0)
+    count = 0
     for i, x1 in enumerate(num_features):
         for x2 in num_features[i + 1:]:
+            print(x2)
             ax = label0_df.plot.scatter(x=x1, y=x2, color='b', marker='x', label='label=0')
             label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1', ax=ax)
-            plt.savefig('../notes/image/scatter-all/' + x1 + '--' + x2)
+            plt.show()
+            # plt.savefig('../notes/image/scatter-all/' + x1 + '--' + x2)
             count += 1
             print(count)
     print('done')
@@ -67,7 +116,8 @@ def num_scatter_1():
     for i, x1 in enumerate(num_features):
         for x2 in num_features[i + 1:]:
             label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1')
-            plt.savefig('../notes/image/scatter-1/' + x1 + '--' + x2)
+            plt.show()
+            # plt.savefig('../notes/image/scatter-1/' + x1 + '--' + x2)
             count += 1
             print(count)
     print('done')
@@ -80,12 +130,12 @@ def box_plot():
     :return:
     """
     data_all = get_clean_raw_data(features_file=features, label_file=label)
-    data = preprocessing.scale(data_all)
-    print(data)
-    data = pd.DataFrame(data)
+    # data = preprocessing.scale(data_all)
+    data = pd.DataFrame(data_all)[num_features]
     # num_features,bool_features
-    data.plot.box(title="Consumer spending in each country")
-    plt.show()
+    for col in num_features:
+        data[col].plot.box()
+        plt.show()
 
 
 def pie_bool_all():
@@ -223,7 +273,7 @@ def hist_plot_all():
         x = np.array(data[col])
         # x = np.sqrt(x)
         # plt.hist(np.sqrt(x), bins=300, log=True)
-        plt.hist(x, bins=300, log=True)
+        plt.hist(x, log=True)
         plt.title(col)
         plt.show()
         # plt.savefig('../notes/image/hist-all/' + col)
@@ -317,7 +367,7 @@ def kde_open_wxtimes_close_cell_num_0vs1():
 
 
 def main():
-    hist_plot_all()
+    num_scatter_all()
 
 
 if __name__ == '__main__':

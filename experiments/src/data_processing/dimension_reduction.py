@@ -2,6 +2,8 @@
 特征选择,特征提取
 """
 import common
+import numpy as np
+import pandas as pd
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.decomposition import PCA
 
@@ -45,8 +47,8 @@ def pca_num_feature(X):
     print('降维前：{}'.format(X.shape))
     pca = PCA(n_components=0.99)
     pca.fit(X)
-    print('variance:', pca.explained_variance_)
-    print('variance_ratio:', pca.explained_variance_ratio_)
+    # print('variance:', pca.explained_variance_)
+    # print('variance_ratio:', pca.explained_variance_ratio_)
     X_pca = pca.transform(X)
     print('降维后：{}'.format(X_pca.shape))
 
@@ -69,7 +71,17 @@ def features_extraction_3d(X):
     X_pca = pca_num_feature(X)
     # label = np.array(raw_data['label']).astype('int')
     # pca_visual(X_pca, label)
-    X_extract = X_pca
+    df = pd.DataFrame(X_pca)
+    # for column in range(3):
+        # df[np.abs(df[column] - df[column].mean()) <= (3 * df[column].std())]
+        # user_data[np.abs(user_data[column] - user_data[column].mean()) <= (3 * user_data[column].std())]
+        # first_quartile = df[column].describe()["25%"]
+        # third_quartile = df[column].describe()["75%"]
+        # iqr = third_quartile - first_quartile
+        #
+        # df = df[(df[column] > (first_quartile - 3 * iqr)) &
+        #                  (df[column] < (third_quartile + 3 * iqr))]
+    X_extract = df.values
     return X_extract
 
 

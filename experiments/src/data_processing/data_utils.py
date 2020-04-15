@@ -1,6 +1,8 @@
 """
 data_processing的主模块
 """
+from collections import Counter
+
 import common
 import re
 import numpy as np
@@ -41,7 +43,7 @@ def get_clean_raw_data(features_file=None, label_file=None):
     :param label_file:
     :return:
     """
-    user_data = pd.read_csv(features_file, encoding='utf-8')
+    user_data = pd.read_csv(features_file, encoding='utf-8', low_memory=False)
     complain_users = pd.read_csv(label_file, encoding='utf-8')["user_id"]
 
     all_users_id = user_data["user_id"]
@@ -73,6 +75,119 @@ def get_clean_raw_data(features_file=None, label_file=None):
 #     return np.array(complained_users_id_real)
 
 
+def _delete_outliers(user_data):
+    """
+    删除outliers
+    :param data: pandas.DataFrame
+    :return: pandas.DataFrame
+    """
+    outlier_count = 0
+
+    outlier_rules = {
+                    'open': 100,
+                    'close': 100,
+                    'beijiao': 100,
+                    'beijiao_times': 100,
+                    'cell_num': 3000,
+                    'zhujiao_jt': 10000,
+                    'zhujiao': 7500,
+                    'ma60': 800,
+                    'mb5': 500,
+                    'mb10': 1500,
+                    'mb30': 2500,
+                    'mb60': 600,
+                    'total_count': 5000,
+                    'zhujiao_time': 400000,
+                    'zhujiao_times': 4000,
+                    'roam_call_duration': 20000,
+                    'roam_duration_02': 200000,
+                    'is_p_app_wx_times': 20000
+                    }
+    for column in num_features:
+        # user_data[np.abs(user_data[column] - user_data[column].mean()) <= (3 * user_data[column].std())]
+
+        # threshold = 0.9
+        # line = user_data[column].quantile(threshold)
+        # median = user_data[column].describe()["50%"]
+        #
+        # user_data[column] = user_data[(user_data[column] < line)][column]
+        #
+        # count = user_data[column].isnull().sum()
+        # outlier_count += count
+        if column in outlier_rules.keys():
+            threshold = outlier_rules[column]
+            user_data[column] = user_data[(user_data[column] < threshold)][column]
+            median = user_data[column].describe()["50%"]
+            count = user_data[column].isnull().sum()
+            outlier_count += count
+            user_data[column].fillna(median, inplace=True)
+        else:
+            print(column)
+    print('去掉的离群点个数：{}'.format(outlier_count))
+
+    # y = user_data['label']
+    # print('数值筛选前：', Counter(y))
+    # # print(user_data)
+    # # 如果这些特征数值较大，则为正常用户
+    # select_rules = {'open': 100,
+    #                 'close': 100,
+    #                 'beijiao': 100,
+    #                 'beijiao_times': 3000,
+    #                 'cell_num': 8000,
+    #                 'zhujiao_jt': 10000,
+    #                 'zhujiao': 10000,
+    #                 'ma60': 800,
+    #                 'mb5': 500,
+    #                 'mb10': 1500,
+    #                 'mb30': 2500,
+    #                 'mb60': 600,
+    #                 'total_count': 5000,
+    #                 'zhujiao_time': 400000,
+    #                 'zhujiao_times': 4000,
+    #                 'roam_call_duration': 20000,
+    #                 'roam_duration_02': 200000,
+    #                 'is_p_app_wx_times': 20000
+    #                 }
+    # # user_data['sel'] = 0
+    # del_index = []
+    # # indies = user_data.index
+    # # print(user_data.iloc[172446])
+    # # user_data.drop(172446, inplace=True)
+    # # user_data.drop(172445, inplace=True)
+    # # user_data.drop(172447, inplace=True)
+    # wtf = 0
+    # for column in select_rules.keys():
+    #     i = 0
+    #     for element in user_data[column]:
+    #         if column == 'is_p_app_wx_times':
+    #             print(select_rules[column])
+    #             # print(user_data.iloc[i])
+    #             # user_data.drop(index = i, inplace=True, axis=0)
+    #         if element > select_rules[column]:
+    #             del_index.append(i)
+    #             wtf += 1
+    #             # user_data['sel'][i] = 1
+    #         i += 1
+    # user_data = user_data.drop(labels=del_index, axis=0)
+    #
+    # print(user_data.shape)
+    # print(len(del_index))
+    # print(wtf)
+
+    # user_data = user_data.groupby('sel').get_group(1)
+    # fuck = 0
+    # for i, element in enumerate(user_data['is_p_app_wx_times']):
+    #     if element > 2500000:
+    #         fuck += 1
+    #         print(i)
+    #         print(user_data.iloc[i])
+    #         print('fuck', element)
+    #         user_data.drop(i-1, inplace=True)
+    # print(fuck)
+
+    return user_data
+
+
 def _wash_data(user_data):
     user_data.dropna(inplace=True)
 
@@ -89,10 +204,16 @@ def _wash_data(user_data):
             i = 0
             for val in user_data[column]:
                 if not str(val).replace(".", "").isdigit():
-                    print("删除列{},第{}行数据：{}".format(column, i,val))
+                    print("删除列{},第{}行数据：{}".format(column, i, val))
                     del_list.append(i)
                 i += 1
     user_data.drop(del_list, inplace=True)
+
+    # delete outlier
+    # print(user_data.describe())
+    user_data = _delete_outliers(user_data)
+    # data = _delete_outliers(data)
+    # print(user_data.shape)
     return user_data
 
 

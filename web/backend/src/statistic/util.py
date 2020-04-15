@@ -32,7 +32,7 @@ def process_num_feature(raw):
         one['var'] = float(raw[col].var())
         one['std'] = float(raw[col].std())
         one['mean'] = float(raw[col].mean())
-        one['median'] = float(raw[col].median())
+        one['median'] = float(raw[col].quantile(.5))
         one['quant_25'] = float(raw[col].quantile(.25))
         one['quant_75'] = float(raw[col].quantile(.75))
         # for k in maps_num.keys():

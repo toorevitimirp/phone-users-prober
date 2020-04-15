@@ -47,10 +47,10 @@ def fscore(y_actual, y_predict):
     evaluation = {'precision': precision,
                   'recall': recall,
                   'f1_score': f1_score}
-    evaluation_detail = {'true_pos': true_pos,
-                         'true_neg': true_neg,
-                         'false_pos': false_pos,
-                         'false_neg': false_neg}
+    evaluation_detail = {'true_positive': true_pos,
+                         'true_negative': true_neg,
+                         'false_positive': false_pos,
+                         'false_negative': false_neg}
     print(json.dumps(evaluation, indent=4, ensure_ascii=False))
     print(json.dumps(evaluation_detail, indent=4, ensure_ascii=False))
     return evaluation

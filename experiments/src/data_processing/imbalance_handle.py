@@ -4,7 +4,7 @@ from collections import Counter
 
 from data_processing.dimension_reduction import features_extraction_3d
 from other.other_utils import beep
-from visualization.sampled_data import visualization_sampled_data
+from visualization.sampled_data import visualization_sampled_data, num_scatter_3d_all, magnifier
 
 
 def _random_over_sample(X, y):
@@ -162,8 +162,8 @@ def imbalanced_handle(X, y):
     # X_sampled, y_sampled = _random_under_sample(X, y)
     # X_sampled, y_sampled = _smote(X, y)
     # X_sampled, y_sampled = _adasyn(X, y)
-    X_sampled, y_sampled = _random_over_sample(X, y)
-    # X_sampled, y_sampled = X, y
+    # X_sampled, y_sampled = _random_over_sample(X, y)
+    X_sampled, y_sampled = X, y
     return X_sampled, y_sampled
 
 
@@ -175,7 +175,9 @@ def main():
     y = np.array(raw_data['label'])
     X_sampled, y_sampled = imbalanced_handle(X, y)
     X_3d = features_extraction_3d(X_sampled)
-    visualization_sampled_data(X_3d, y_sampled)
+    # magnifier(X_3d, y)
+    num_scatter_3d_all(X_3d, y)
+    # visualization_sampled_data(X_3d, y_sampled)
 
 
 if __name__ == '__main__':
