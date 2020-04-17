@@ -2,7 +2,16 @@
 对features按数据类型分类
 """
 import common
+
+import pandas as pd
+
 from data_processing.data_utils import get_clean_raw_data
+
+num_features = ['roam_call_duration', 'roam_duration_02', 'mon_use_days',
+                'is_p_app_wx_times', 'zhujiao_time', 'zhujiao_times',
+                'mb5', 'mb10', 'mb30', 'mb60', 'ma60', 'total_count',
+                'beijiao_times', 'use_days', 'zhujiao', 'beijiao',
+                'zhujiao_jt', 'open', 'close', 'open_day', 'cell_num']
 
 
 def bool_num():
@@ -29,5 +38,15 @@ def bool_num():
     print(bool_features, num_features)
 
 
+def disc_continuous():
+    features = '../../data/3月用户相关数据.csv'
+    label = '../../data/3月被投诉用户.csv'
+    data = get_clean_raw_data(features_file=features, label_file=label)
+    # data = get_clean_raw_data(features_file, label_file)
+    for col in num_features:
+        print(col)
+        print(data[col].unique())
+
+
 if __name__ == '__main__':
-    bool_num()
+    disc_continuous()

@@ -272,8 +272,8 @@ def hist_plot_all():
         plt.figure()
         x = np.array(data[col])
         # x = np.sqrt(x)
-        # plt.hist(np.sqrt(x), bins=300, log=True)
-        plt.hist(x, log=True)
+        plt.hist(x, bins=300, log=True)
+        # plt.hist(x, bins=100)
         plt.title(col)
         plt.show()
         # plt.savefig('../notes/image/hist-all/' + col)
@@ -285,19 +285,20 @@ def hist_plot_0vs1():
     label1_df = grouped.get_group(1)
     label0_df = grouped.get_group(0)
     beep()
+    num_features = ['beijiao_times', 'use_days', 'zhujiao', 'beijiao', 'open', 'close', 'open_day']
     for col in num_features:
         plt.figure()
         plt.suptitle(col, fontsize=14)
 
         plt.subplot(211)
         x = np.array(label0_df[col])
-        plt.hist(np.sqrt(x), bins=300, log=True)
+        plt.hist(x, bins=300, log=False)
         # label0_df[col].plot(kind='hist')
         plt.xlabel('label=0')
 
         plt.subplot(212)
         x = np.array(label1_df[col])
-        plt.hist(np.sqrt(x), bins=30, log=True, color='r')
+        plt.hist(x, bins=30, log=False, color='r')
         # label1_df[col].plot(kind='hist')
         plt.xlabel('label=1')
 
@@ -367,7 +368,7 @@ def kde_open_wxtimes_close_cell_num_0vs1():
 
 
 def main():
-    num_scatter_all()
+    hist_plot_all()
 
 
 if __name__ == '__main__':

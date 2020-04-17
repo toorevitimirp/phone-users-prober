@@ -36,6 +36,20 @@ def _is_number(num):
         return False
 
 
+def _remove_filers_with_boxplot(data):
+    print('根据boxplot去掉异常值前：', format(data.shape))
+    p = data.boxplot(return_type='dict')
+    for index,value in enumerate(data.columns):
+        # 获取异常值
+        fliers_value_list = p['fliers'][index].get_ydata()
+        # 删除异常值
+        for flier in fliers_value_list:
+            data = data[data.loc[:, value] != flier]
+
+    print('根据boxplot去掉异常值后：', format(data.shape))
+    return data
+
+
 def get_clean_raw_data(features_file=None, label_file=None):
     """
     返回清洗过的数据，没有其他处理
@@ -75,34 +89,47 @@ def get_clean_raw_data(features_file=None, label_file=None):
 #     return np.array(complained_users_id_real)
 
 
-def _delete_outliers(user_data):
+def _delete_outliers_by_lof(user_data):
     """
-    删除outliers
-    :param data: pandas.DataFrame
+    :param user_data: pandas.DataFrame
     :return: pandas.DataFrame
     """
+    from sklearn.neighbors import LocalOutlierFactor
+    clf = LocalOutlierFactor()
+    # columns = user_data.columns.values.tolist()
+    X = user_data.values
+    y_pred = clf.fit_predict(X)
+    user_data['is_inlier'] = y_pred
+
+    result = user_data.groupby('is_inlier').get_group(1)
+
+    print('去掉离群点个数:{}'.format(sum(np.array(y_pred) == -1)))
+    return result
+
+
+def _delete_outliers_by_rule(user_data):
     outlier_count = 0
 
     outlier_rules = {
-                    'open': 100,
-                    'close': 100,
-                    'beijiao': 100,
-                    'beijiao_times': 100,
-                    'cell_num': 3000,
-                    'zhujiao_jt': 10000,
-                    'zhujiao': 7500,
-                    'ma60': 800,
-                    'mb5': 500,
-                    'mb10': 1500,
-                    'mb30': 2500,
-                    'mb60': 600,
-                    'total_count': 5000,
-                    'zhujiao_time': 400000,
-                    'zhujiao_times': 4000,
-                    'roam_call_duration': 20000,
-                    'roam_duration_02': 200000,
-                    'is_p_app_wx_times': 20000
-                    }
+        'open': 100,
+        'close': 100,
+        'beijiao': 100,
+        'beijiao_times': 100,
+        'cell_num': 3000,
+        'zhujiao_jt': 10000,
+        'zhujiao': 7500,
+        'ma60': 800,
+        'mb5': 500,
+        'mb10': 1500,
+        'mb30': 2500,
+        'mb60': 600,
+        'total_count': 5000,
+        'zhujiao_time': 400000,
+        'zhujiao_times': 4000,
+        'roam_call_duration': 20000,
+        'roam_duration_02': 200000,
+        'is_p_app_wx_times': 20000
+    }
     for column in num_features:
         # user_data[np.abs(user_data[column] - user_data[column].mean()) <= (3 * user_data[column].std())]
 
@@ -184,8 +211,30 @@ def _delete_outliers(user_data):
     #         print('fuck', element)
     #         user_data.drop(i-1, inplace=True)
     # print(fuck)
-
     return user_data
+
+
+def _delete_outliers(user_data):
+    """
+    删除outliers
+    :param data: pandas.DataFrame
+    :return: pandas.DataFrame
+    """
+    # user_data = _remove_filers_with_boxplot(user_data)
+    return _delete_outliers_by_lof(user_data)
+
+
+def _print_basic_info(data):
+    tests = [0.8, 0.85, 0.9, 0.95, 1]
+    print('\t\t', end='\t')
+    for i in tests:
+        print(i, end='\t')
+    print('\n')
+    for column in num_features:
+        print(column, end='\t')
+        for v in tests:
+            print(data[column].quantile(v), end='\t')
+        print('\n')
 
 
 def _wash_data(user_data):
@@ -209,9 +258,32 @@ def _wash_data(user_data):
                 i += 1
     user_data.drop(del_list, inplace=True)
 
+    _print_basic_info(user_data)
+    user_data = _delete_outliers(user_data)
+    _print_basic_info(user_data)
+
+    # for column in num_features:
+    #     outlier_count = 0
+    #     threshold = user_data[column].quantile()
+    #     user_data[column] = user_data[(user_data[column] < threshold)][column]
+    #     count = user_data[column].isnull().sum()
+    #     mean = user_data[column].mean()
+    #     outlier_count += count
+    #     user_data[column].fillna(mean, inplace=True)
+    # print('去掉的离群点个数：{}'.format(outlier_count))
+    #     for i, val in enumerate(user_data[column]):
+    #         # rule = third_quartile + 3 * iqr
+    #         rule = user_data[column].quantile(0.9)
+    #         if val > rule:
+    #             user_data.loc[i, column] = mean
+    #             iqr_count += 1
+    #             # print(rule)
+    #             # print(iqr_count)
+    # print('iqr:', iqr_count)
+
     # delete outlier
     # print(user_data.describe())
-    user_data = _delete_outliers(user_data)
+
     # data = _delete_outliers(data)
     # print(user_data.shape)
     return user_data
