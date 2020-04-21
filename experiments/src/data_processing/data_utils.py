@@ -131,16 +131,6 @@ def _delete_outliers_by_rule(user_data):
         'is_p_app_wx_times': 20000
     }
     for column in num_features:
-        # user_data[np.abs(user_data[column] - user_data[column].mean()) <= (3 * user_data[column].std())]
-
-        # threshold = 0.9
-        # line = user_data[column].quantile(threshold)
-        # median = user_data[column].describe()["50%"]
-        #
-        # user_data[column] = user_data[(user_data[column] < line)][column]
-        #
-        # count = user_data[column].isnull().sum()
-        # outlier_count += count
         if column in outlier_rules.keys():
             threshold = outlier_rules[column]
             user_data[column] = user_data[(user_data[column] < threshold)][column]
@@ -152,66 +142,54 @@ def _delete_outliers_by_rule(user_data):
             print(column)
     print('去掉的离群点个数：{}'.format(outlier_count))
 
-    # y = user_data['label']
-    # print('数值筛选前：', Counter(y))
-    # # print(user_data)
-    # # 如果这些特征数值较大，则为正常用户
-    # select_rules = {'open': 100,
-    #                 'close': 100,
-    #                 'beijiao': 100,
-    #                 'beijiao_times': 3000,
-    #                 'cell_num': 8000,
-    #                 'zhujiao_jt': 10000,
-    #                 'zhujiao': 10000,
-    #                 'ma60': 800,
-    #                 'mb5': 500,
-    #                 'mb10': 1500,
-    #                 'mb30': 2500,
-    #                 'mb60': 600,
-    #                 'total_count': 5000,
-    #                 'zhujiao_time': 400000,
-    #                 'zhujiao_times': 4000,
-    #                 'roam_call_duration': 20000,
-    #                 'roam_duration_02': 200000,
-    #                 'is_p_app_wx_times': 20000
-    #                 }
-    # # user_data['sel'] = 0
-    # del_index = []
-    # # indies = user_data.index
-    # # print(user_data.iloc[172446])
-    # # user_data.drop(172446, inplace=True)
-    # # user_data.drop(172445, inplace=True)
-    # # user_data.drop(172447, inplace=True)
-    # wtf = 0
-    # for column in select_rules.keys():
-    #     i = 0
-    #     for element in user_data[column]:
-    #         if column == 'is_p_app_wx_times':
-    #             print(select_rules[column])
-    #             # print(user_data.iloc[i])
-    #             # user_data.drop(index = i, inplace=True, axis=0)
-    #         if element > select_rules[column]:
-    #             del_index.append(i)
-    #             wtf += 1
-    #             # user_data['sel'][i] = 1
-    #         i += 1
-    # user_data = user_data.drop(labels=del_index, axis=0)
-    #
-    # print(user_data.shape)
-    # print(len(del_index))
-    # print(wtf)
-
-    # user_data = user_data.groupby('sel').get_group(1)
-    # fuck = 0
-    # for i, element in enumerate(user_data['is_p_app_wx_times']):
-    #     if element > 2500000:
-    #         fuck += 1
-    #         print(i)
-    #         print(user_data.iloc[i])
-    #         print('fuck', element)
-    #         user_data.drop(i-1, inplace=True)
-    # print(fuck)
     return user_data
+
+
+def _remove_filers_by_quantile(data):
+    """
+
+    :param data: pandas.DataFrame
+    :return: pandas.DataFrame
+    """
+    y = data['label']
+    outlier_rules = {
+        'open': 50,
+        'close': 70,
+        'beijiao': 50,
+        'beijiao_times': 4200,
+        'cell_num': 300,
+        'zhujiao_jt': 9000,
+        'zhujiao': 8000,
+        'ma60': 400,
+        'mb5': 500,
+        'mb10': 800,
+        'mb30': 2500,
+        'mb60': 800,
+        'total_count': 5000,
+        'zhujiao_time': 400000,
+        'zhujiao_times': 4000,
+        'roam_call_duration': 2000,
+        'roam_duration_02': 200000,
+        'is_p_app_wx_times': 15000,
+    }
+    for index, row in data.iteritems():
+        if index in outlier_rules.keys():
+            outlier_count = 0
+            complained_outlier_count = 0
+            # threshold = row.quantile(0.95)
+            threshold = outlier_rules[index]
+            mean = row.mean()
+            median = row.median()
+            for i, v in row.items():
+                if v > threshold:
+                    if y[i] == 1:
+                        complained_outlier_count += 1
+                    else:
+                        outlier_count += 1
+                        row[i] = median
+            print(index, ' outliers:', outlier_count, ' complained:', complained_outlier_count)
+
+    return data
 
 
 def _delete_outliers(user_data):
@@ -220,8 +198,9 @@ def _delete_outliers(user_data):
     :param data: pandas.DataFrame
     :return: pandas.DataFrame
     """
-    # user_data = _remove_filers_with_boxplot(user_data)
-    return _delete_outliers_by_lof(user_data)
+    user_data = _remove_filers_by_quantile(user_data)
+    # user_data = _delete_outliers_by_lof(user_data)
+    return user_data
 
 
 def _print_basic_info(data):
@@ -258,34 +237,8 @@ def _wash_data(user_data):
                 i += 1
     user_data.drop(del_list, inplace=True)
 
-    _print_basic_info(user_data)
     user_data = _delete_outliers(user_data)
-    _print_basic_info(user_data)
 
-    # for column in num_features:
-    #     outlier_count = 0
-    #     threshold = user_data[column].quantile()
-    #     user_data[column] = user_data[(user_data[column] < threshold)][column]
-    #     count = user_data[column].isnull().sum()
-    #     mean = user_data[column].mean()
-    #     outlier_count += count
-    #     user_data[column].fillna(mean, inplace=True)
-    # print('去掉的离群点个数：{}'.format(outlier_count))
-    #     for i, val in enumerate(user_data[column]):
-    #         # rule = third_quartile + 3 * iqr
-    #         rule = user_data[column].quantile(0.9)
-    #         if val > rule:
-    #             user_data.loc[i, column] = mean
-    #             iqr_count += 1
-    #             # print(rule)
-    #             # print(iqr_count)
-    # print('iqr:', iqr_count)
-
-    # delete outlier
-    # print(user_data.describe())
-
-    # data = _delete_outliers(data)
-    # print(user_data.shape)
     return user_data
 
 
@@ -356,3 +309,42 @@ def prepare_data_4_prediction(features_file=None, label_file=None):
     users_id = np.array(raw_data['user_id'])
 
     return X_final, y, users_id
+
+
+def _get_outliers_rules():
+
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    user_data = pd.read_csv(features, encoding='utf-8', low_memory=False)
+    complain_users = pd.read_csv(label, encoding='utf-8')["user_id"]
+
+    all_users_id = user_data["user_id"]
+    labels = all_users_id.isin(complain_users).astype("int")
+    user_data["label"] = labels
+
+    maxs = []
+    complain_users = user_data.groupby('label').get_group(1)
+    for index, row in complain_users.iteritems():
+        if index in num_features:
+            _max = row.max()
+            # print(index, ':', _max)
+            maxs.append(_max)
+
+    # print('______________________\n')
+    thresholds = []
+    for index, row in user_data.iteritems():
+        if index in num_features:
+            threshold = row.quantile(0.95)
+            # print(index, ':', threshold)
+            thresholds.append(threshold)
+
+    df = pd.DataFrame()
+    df['column'] = pd.Series(num_features)
+    df['max'] = pd.Series(maxs)
+    df['threshold'] = pd.Series(thresholds)
+    print(df)
+
+
+if __name__ == '__main__':
+    _get_outliers_rules()

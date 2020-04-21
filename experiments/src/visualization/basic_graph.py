@@ -96,8 +96,8 @@ def num_scatter_all():
             print(x2)
             ax = label0_df.plot.scatter(x=x1, y=x2, color='b', marker='x', label='label=0')
             label1_df.plot.scatter(x=x1, y=x2, color='r', marker='+', label='label=1', ax=ax)
-            plt.show()
-            # plt.savefig('../notes/image/scatter-all/' + x1 + '--' + x2)
+            # plt.show()
+            plt.savefig('../../notes/image/scatter-all-delete-outliers/' + x1 + '--' + x2)
             count += 1
             print(count)
     print('done')
@@ -367,8 +367,56 @@ def kde_open_wxtimes_close_cell_num_0vs1():
     beep()
 
 
+def quantile_raw():
+    """
+    未清理的数据的分位数图
+    :return:
+    """
+    data = pd.read_csv(features, encoding='utf-8', low_memory=False)
+    complain_users = pd.read_csv(label, encoding='utf-8')["user_id"]
+    all_users_id = data["user_id"]
+    labels = all_users_id.isin(complain_users).astype("int")
+    data["label"] = labels
+
+    x = np.arange(0, 101, 1)/100
+    for col in num_features:
+        f = data[col]
+        y = np.zeros(len(x))
+        for i, v in enumerate(x):
+            y[i] = f.quantile(v)
+
+        plt.figure()
+        plt.scatter(x=x, y=y, s=3, marker='o')
+        plt.title(col)
+        plt.savefig('../../notes/image/quantile-raw/' + col)
+        # plt.show()
+
+
+def quantile_washed():
+    """
+    清理后的数据的分位数图
+    :return:
+    """
+    data = get_clean_raw_data(features_file=features, label_file=label)
+
+    x = np.arange(0, 101, 1)/100
+
+    for col in num_features:
+        y = np.zeros(len(x))
+        f = data[col]
+
+        for i, v in enumerate(x):
+            y[i] = f.quantile(v)
+
+        plt.figure()
+        plt.scatter(x=x, y=y, marker='o', s=3, color='green')
+        plt.title(col)
+        plt.savefig('../../notes/image/quantile-washed/' + col)
+        # plt.show()
+
+
 def main():
-    hist_plot_all()
+    num_scatter_all()
 
 
 if __name__ == '__main__':
