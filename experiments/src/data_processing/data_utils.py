@@ -12,6 +12,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
+from other.other_utils import beep
 
 bool_features = ['users_3w', 'twolow_users', 'roam_users02', 'roam_users01',
                  'vv_type', 'in16_roam_tag']
@@ -94,16 +95,25 @@ def _delete_outliers_by_lof(user_data):
     :param user_data: pandas.DataFrame
     :return: pandas.DataFrame
     """
+    beep()
     from sklearn.neighbors import LocalOutlierFactor
     clf = LocalOutlierFactor()
     # columns = user_data.columns.values.tolist()
-    X = user_data.values
+    X = user_data[num_features].values
+    print(X.shape)
+    y = user_data['label']
     y_pred = clf.fit_predict(X)
     user_data['is_inlier'] = y_pred
 
+    wrong_delete = 0
+    for i, j in zip(y, y_pred):
+        if i == 1 and j == -1:
+            wrong_delete += 1
+            print(wrong_delete)
     result = user_data.groupby('is_inlier').get_group(1)
 
-    print('去掉离群点个数:{}'.format(sum(np.array(y_pred) == -1)))
+    print('去掉离群点个数:{},错误删除的离群点有:{}'.format(sum(np.array(y_pred) == -1), wrong_delete))
+    beep()
     return result
 
 
@@ -184,9 +194,8 @@ def _remove_filers_by_quantile(data):
                 if v > threshold:
                     if y[i] == 1:
                         complained_outlier_count += 1
-                    else:
-                        outlier_count += 1
-                        row[i] = median
+                    outlier_count += 1
+                    row[i] = median
             print(index, ' outliers:', outlier_count, ' complained:', complained_outlier_count)
 
     return data
@@ -346,5 +355,95 @@ def _get_outliers_rules():
     print(df)
 
 
+def _test_lof():
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    get_clean_raw_data(features_file=features,label_file=label)
+
+
+def _test_outliers():
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    get_clean_raw_data(features_file=features, label_file=label)
+
+
+def _variance_test():
+    features = '../../data/3月用户相关数据.csv'
+    label = '../../data/3月被投诉用户.csv'
+
+    data = get_clean_raw_data(features_file=features, label_file=label)
+
+    print(data[bool_features].std())
+    print("++++++++++++++++++++++++++++++++\n")
+    print(data[num_features].std())
+
+
+def _chi2_test():
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import chi2
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    data = get_clean_raw_data(features_file=features, label_file=label)
+    all_features = num_features + bool_features
+    X = data[all_features].values
+    y = data['label']
+    # X_fschi = SelectKBest(chi2, k=3).fit_transform(X, y)
+    chi_values, p_values = chi2(X, y)
+
+    for n, p in zip(num_features, p_values):
+        print(n)
+        print("%.3f" % p)
+
+
+def _f_test():
+    from sklearn.feature_selection import f_classif
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    data = get_clean_raw_data(features_file=features, label_file=label)
+    # all_features = num_features + bool_features
+    X = data[num_features].values
+    y = data['label']
+
+    F, pvalues_f = f_classif(X, y)
+    print(num_features)
+    for n, p in zip(num_features, pvalues_f):
+        print(n)
+        print("%.3f" % p)
+
+
+def _mic_test():
+    from sklearn.feature_selection import mutual_info_classif as MIC
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+
+    data = get_clean_raw_data(features_file=features, label_file=label)
+    X = data[num_features].values
+    y = data['label']
+
+    result = MIC(X, y)
+    for n, p in zip(num_features, result):
+        print(n)
+        print("%.3f" % p)
+
+
+def _pc_test():
+    features = '../../data/4月用户相关数据.csv'
+    label = '../../data/4月被投诉用户.csv'
+    from pandas.plotting import parallel_coordinates
+    import matplotlib.pyplot as plt
+    data = get_clean_raw_data(features_file=features, label_file=label)
+    X = data[num_features]
+    X['label'] = data['label']
+    plt.figure()
+    beep()
+    parallel_coordinates(X, 'label')
+    beep()
+    plt.show()
+
+
 if __name__ == '__main__':
-    _get_outliers_rules()
+    _mic_test()

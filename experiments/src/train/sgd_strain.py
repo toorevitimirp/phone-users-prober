@@ -28,7 +28,7 @@ def sgd():
 
     y_pred_test = clf.predict(X_test)
     fscore(y_actual=y_test, y_predict=y_pred_test)
-    roc_auc(y_actual=y_train, y_score=y_score_train[:, 1])
+    # roc_auc(y_actual=y_train, y_score=y_score_train[:, 1])
     roc_auc(y_actual=y_test, y_score=y_score_test[:, 1])
     # pre.threshold_pred(model=clf, threshold=0.3, X=X_train, y=y_train)
     # # eva_train = pre_rec_fscore(y_actual=y_train, y_predict=y_pred_train)

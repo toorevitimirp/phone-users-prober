@@ -1,10 +1,12 @@
+import time
+
 import common
 import numpy as np
 from collections import Counter
 
 from data_processing.dimension_reduction import features_extraction_3d
 from other.other_utils import beep
-from visualization.sampled_data import visualization_sampled_data, num_scatter_3d_all, magnifier
+from visualization.sampled_data import visualization_sampled_data, num_scatter_3d_all, magnifier, visualization_lda
 
 
 def _random_over_sample(X, y):
@@ -155,6 +157,8 @@ def imbalanced_handle(X, y):
     :param y: m×1的np.ndarray, 标签
     :return: X:r×n的np.ndarray y:r×1的np.ndarray
     """
+    start = time.time()
+    X_sampled, y_sampled = _smotetomek(X, y)
     # X_sampled, y_sampled = _smoteenn(X, y)
     # X_sampled, y_sampled = _iht(X, y)
     # X_sampled, y_sampled = _tomek_links(X, y)
@@ -163,22 +167,26 @@ def imbalanced_handle(X, y):
     # X_sampled, y_sampled = _smote(X, y)
     # X_sampled, y_sampled = _adasyn(X, y)
     # X_sampled, y_sampled = _random_over_sample(X, y)
-    X_sampled, y_sampled = X, y
+    # X_sampled, y_sampled = X, y
+    end = time.time()
+    print('采样时间：', end-start)
     return X_sampled, y_sampled
 
 
-def main():
-    from data_processing.data_utils import get_clean_raw_data, num_features
-    raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
-                                  label_file='../../data/3月被投诉用户.csv')
-    X = np.array(raw_data[num_features])
-    y = np.array(raw_data['label'])
-    X_sampled, y_sampled = imbalanced_handle(X, y)
-    X_3d = features_extraction_3d(X_sampled)
-    # magnifier(X_3d, y)
-    num_scatter_3d_all(X_3d, y)
-    # visualization_sampled_data(X_3d, y_sampled)
-
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     from data_processing.data_utils import get_clean_raw_data, num_features
+#     raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
+#                                   label_file='../../data/3月被投诉用户.csv')
+#     X = np.array(raw_data[num_features])
+#     y = np.array(raw_data['label'])
+#
+#     X_sampled, y_sampled = imbalanced_handle(X, y)
+#     X = features_extraction_3d(X_sampled, y_sampled)
+#     visualization_lda(X, y_sampled)
+#     # magnifier(X_3d, y)
+#     # num_scatter_3d_all(X_3d, y)
+#     # visualization_sampled_data(X_3d, y_sampled)
+#
+#
+# if __name__ == '__main__':
+#     main()

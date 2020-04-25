@@ -87,3 +87,16 @@ def visualization_sampled_data(X_3d, y_sampled):
     pos1 = np.array(pos1)
 
     draw_3d(pos0, pos1)
+
+
+def visualization_lda(X, y):
+    df = pd.DataFrame(X)
+    df['label'] = pd.Series(y)
+    grouped = df.groupby('label')
+
+    data_1 = grouped.get_group(1)
+    data_0 = grouped.get_group(0)
+    ax = data_0.plot.scatter(x=0, y='label', color='b', marker='x', label='label=0')
+    data_1.plot.scatter(x=0, y='label', color='r', marker='+', label='label=1', ax=ax)
+    plt.locator_params('y', nbins=2)
+    plt.show()

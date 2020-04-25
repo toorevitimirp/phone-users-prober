@@ -267,13 +267,21 @@ def hist_plot_all():
     直方图（密度图有缺陷）,数值型特征
     :return:
     """
+    # from sklearn.preprocessing import StandardScaler
     data = get_clean_raw_data(features_file=features, label_file=label)
+    # X = data[num_features]
+    # scaler = StandardScaler()
+    # X = scaler.fit_transform(X)
+    # print(X.mean())
+    # print(X.std())
+    # data = pd.DataFrame(X, columns=num_features)
     for col in num_features:
         plt.figure()
         x = np.array(data[col])
+        
         # x = np.sqrt(x)
-        plt.hist(x, bins=300, log=True)
-        # plt.hist(x, bins=100)
+        # plt.hist(x, bins=300, log=True)
+        plt.hist(x,bins=100)
         plt.title(col)
         plt.show()
         # plt.savefig('../notes/image/hist-all/' + col)
@@ -411,12 +419,12 @@ def quantile_washed():
         plt.figure()
         plt.scatter(x=x, y=y, marker='o', s=3, color='green')
         plt.title(col)
-        plt.savefig('../../notes/image/quantile-washed/' + col)
-        # plt.show()
+        # plt.savefig('../../notes/image/quantile-washed/' + col)
+        plt.show()
 
 
 def main():
-    num_scatter_all()
+    quantile_washed()
 
 
 if __name__ == '__main__':

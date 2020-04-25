@@ -45,7 +45,7 @@ def pca_num_feature(X):
     :return: m×3的np.ndarray, 降维后的特征集
     """
     print('降维前：{}'.format(X.shape))
-    pca = PCA(n_components=0.99)
+    pca = PCA(n_components=3)
     pca.fit(X)
     # print('variance:', pca.explained_variance_)
     # print('variance_ratio:', pca.explained_variance_ratio_)
@@ -59,9 +59,30 @@ def pca_num_feature(X):
     return X_pca
 
 
+def lda_num_feature(X, y):
+    """
+    lda算法
+    :param
+    X: m×n的np.ndarray, 特征集
+    :return: m×3
+    的np.ndarray, 降维后的特征集
+    """
+    from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+    print('降维前：{}'.format(X.shape))
+    lda = LinearDiscriminantAnalysis(solver='eigen')
+    lda.fit(X, y)
+
+    X_lda = lda.transform(X)
+
+    print('降维后：{}'.format(X_lda.shape))
+
+    return X_lda
+
+
 def features_extraction_3d(X):
     """
     pca降维
+    :param y: m×1的np.ndarray, 标签
     :param X: m×n的np.ndarray, 特征集
     :return: m×3的np.ndarray, 降维后的特征集
     """
@@ -70,18 +91,14 @@ def features_extraction_3d(X):
     # X = raw_data[num_features]
     X_pca = pca_num_feature(X)
     # label = np.array(raw_data['label']).astype('int')
-    # pca_visual(X_pca, label)
+    # df = pd.DataFrame(X_pca)
+    # X_extract = df.values
+
+    # X_lda = lda_num_feature(X, y)
+    # label = np.array(raw_data['label']).astype('int')
     df = pd.DataFrame(X_pca)
-    # for column in range(3):
-        # df[np.abs(df[column] - df[column].mean()) <= (3 * df[column].std())]
-        # user_data[np.abs(user_data[column] - user_data[column].mean()) <= (3 * user_data[column].std())]
-        # first_quartile = df[column].describe()["25%"]
-        # third_quartile = df[column].describe()["75%"]
-        # iqr = third_quartile - first_quartile
-        #
-        # df = df[(df[column] > (first_quartile - 3 * iqr)) &
-        #                  (df[column] < (third_quartile + 3 * iqr))]
     X_extract = df.values
+
     return X_extract
 
 
