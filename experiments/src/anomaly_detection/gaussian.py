@@ -29,7 +29,7 @@ def _prepare_data_4_training(features_file=None, label_file=None):
 
     X_final = X_extract
 
-    return X_final, y,
+    return X_final, y
 
 
 def _prepare_data_4_prediction(features_file=None, label_file=None):
@@ -101,9 +101,5 @@ def anomaly_detection():
     roc_auc(y_actual=y_test, y_score=p)
 
 
-def main():
-    inspect()
-
-
 if __name__ == '__main__':
-    main()
+    anomaly_detection()

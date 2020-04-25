@@ -12,8 +12,9 @@ from sklearn.model_selection import KFold
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
 from other.other_utils import beep
-from data_processing.data_utils import prepare_data_4_training, get_clean_raw_data, num_features
-from evaluation.imbalanced_evaluation import fscore
+from data_processing.data_utils import prepare_data_4_training, get_clean_raw_data, num_features, \
+    prepare_data_4_prediction
+from evaluation.imbalanced_evaluation import fscore, roc_auc
 from prediction.prediction import predict_complained_users_id
 
 
@@ -91,18 +92,21 @@ def _prepare_data_4_prediction(features_file=None, label_file=None):
 
 def linear_kernel():
     beep()
-    X, y = prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
-                                   label_file='../../data/3月被投诉用户.csv')
-    # k_fold = KFold(n_splits=2, shuffle=True)
-    clf = LinearSVC(max_iter=10000, class_weight={0: 7, 1: 10000})
-    # for train_indices, test_indices in k_fold.split(X):
-    #     clf.fit(X[train_indices], y[train_indices])
-    #     prediction = clf.predict(X[test_indices])
-    #     print(pre_rec_fscore(y[test_indices], prediction))
-    clf.fit(X, y)
-    predict_complained_users_id(clf,
-                                features_file_test='../../data/4月用户相关数据.csv',
-                                label_file_test='../../data/4月被投诉用户.csv')
+    X_train, y_train = prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
+                                               label_file='../../data/3月被投诉用户.csv')
+
+    X_test, y_test, _ = prepare_data_4_prediction(features_file='../../data/3月用户相关数据.csv',
+                                               label_file='../../data/3月被投诉用户.csv')
+    clf = LinearSVC(max_iter=10000, class_weight='balanced')
+
+    clf.fit(X_train, y_train)
+
+    y_score_test = clf.predict_proba(X_test)
+
+    y_pred_test = clf.predict(X_test)
+    roc_auc(y_actual=y_test, y_score=y_score_test[:, 1])
+    fscore(y_actual=y_test, y_predict=y_pred_test)
+
     beep()
     print('done')
 
@@ -123,7 +127,7 @@ def high_kernel():
 
 
 def main():
-    high_kernel()
+    linear_kernel()
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ https://en.wikipedia.org/wiki/Feature_engineering
 https://zh.wikipedia.org/zh-hans/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C
 
 https://www.zhihu.com/question/29316149/answer/110159647
-
+https://www.cnblogs.com/LittleHann/p/10587512.html#_lab2_0_1
 https://zh.wikipedia.org/wiki/%E9%99%8D%E7%BB%B4
 
 http://www.cnki.com.cn/Article/CJFDTotal-YJSK200704008.htm
@@ -52,3 +52,7 @@ https://zhuanlan.zhihu.com/p/52302383
 
 数据嗨客 | 第6期：不平衡数据处理
 https://mp.weixin.qq.com/s?__biz=MzAwMzIxMjIyMg==&mid=2651005812&idx=1&sn=b9819f04cb2ee9af21f4011d34013824&scene=0
+
+https://www.cnblogs.com/LittleHann/p/10587512.html#_lab2_0_1
+
+https://www.ibm.com/developerworks/cn/opensource/os-cn-datamining/index.html
