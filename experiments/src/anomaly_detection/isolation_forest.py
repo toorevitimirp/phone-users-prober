@@ -44,8 +44,8 @@ def anomaly_detection():
             print('预测结果非-1,1')
 
     fscore(y_actual=y_test, y_predict=y_pred)
-    # y_score = clf.decision_function(X_test)
-    # roc_auc(y_actual=y_test, y_score=y_score)
+    y_score = clf.decision_function(X_test)
+    roc_auc(y_actual=y_test, y_score=y_score)
 
 
 def main():
