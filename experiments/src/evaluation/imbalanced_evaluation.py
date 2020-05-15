@@ -63,7 +63,7 @@ def roc_auc(y_actual, y_score):
     plt.plot(fpr, tpr)
     plt.show()
     auc = metrics.auc(fpr, tpr)
-    print(thresholds)
+    # print(thresholds)
     print('auc:{}'.format(auc))
     return auc
 
