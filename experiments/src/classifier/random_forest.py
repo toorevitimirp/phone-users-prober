@@ -1,5 +1,4 @@
 import common
-from sklearn.linear_model import SGDClassifier
 import numpy as np
 import pandas as pd
 from data_processing.data_utils import get_clean_raw_data, num_features
@@ -9,42 +8,9 @@ from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
 from evaluation.imbalanced_evaluation import fscore, roc_auc
 from sklearn import tree
+from sklearn.ensemble import RandomForestClassifier
 from time import time
 
-
-# def sgd():
-#     beep()
-#     X_train, y_train = prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
-#                                                label_file='../../data/3月被投诉用户.csv')
-#     X_test, y_test, _ = prepare_data_4_prediction(features_file='../../data/4月用户相关数据.csv',
-#                                                   label_file='../../data/4月被投诉用户.csv')
-#
-#     clf = SGDClassifier(max_iter=10000, class_weight='balanced', loss="log")
-#
-#     clf.fit(X_train, y_train)
-#
-#     y_score_train = clf.predict_proba(X_train)
-#     y_score_test = clf.predict_proba(X_test)
-#
-#     y_pred_test = clf.predict(X_test)
-#     fscore(y_actual=y_test, y_predict=y_pred_test)
-#     # roc_auc(y_actual=y_train, y_score=y_score_train[:, 1])
-#     roc_auc(y_actual=y_test, y_score=y_score_test[:, 1])
-#     # pre.threshold_pred(model=clf, threshold=0.3, X=X_train, y=y_train)
-#     # # eva_train = pre_rec_fscore(y_actual=y_train, y_predict=y_pred_train)
-#     #
-#     # pre.threshold_pred(model=clf, threshold=0.6, X=X_test, y=y_test)
-#     # eva_test = pre_rec_fscore(y_actual=y_test, y_predict=y_pred_test)
-#
-#     # pre.predict_complained_users_id(clf,
-#     #                                 features_file_test='../../data/4月用户相关数据.csv',
-#     #                                 label_file_test='../../data/4月被投诉用户.csv')
-#     # pre.predict_complained_users_id(clf,
-#     #                                 features_file_test='../../data/3月用户相关数据.csv',
-#     #                                 label_file_test='../../data/3月被投诉用户.csv')
-#     beep()
-#
-#     print('done')
 
 class SGD:
     def __init__(self,
@@ -52,7 +18,9 @@ class SGD:
                  label_file_train,
                  features_file_test,
                  label_file_test):
-        self.clf = SGDClassifier(class_weight='balanced', loss="log")
+        self.clf = RandomForestClassifier(bootstrap=True,
+                                          oob_score=True,
+                                          criterion='gini')
 
         self.cost_time = -1
 

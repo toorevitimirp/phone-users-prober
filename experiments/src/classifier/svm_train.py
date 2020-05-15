@@ -1,133 +1,93 @@
-from collections import Counter
-
+import common
 import numpy as np
-
+from sklearn.svm import LinearSVC
+import numpy as np
+import pandas as pd
+from data_processing.data_utils import get_clean_raw_data, num_features
 from sklearn import preprocessing
 from sklearn.preprocessing import PolynomialFeatures
-
-import common
-from sklearn.svm import LinearSVC
-from sklearn.model_selection import KFold
-
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
-from other.other_utils import beep
-from data_processing.data_utils import prepare_data_4_training, get_clean_raw_data, num_features, \
-    prepare_data_4_prediction
 from evaluation.imbalanced_evaluation import fscore, roc_auc
-from prediction.prediction import predict_complained_users_id
+from sklearn import tree
+from sklearn.ensemble import RandomForestClassifier
+from time import time
+from other_utils import beep
 
 
-def _prepare_data_4_training(features_file=None, label_file=None):
-    """
-    imbalanced data processing,降维，feature scaling，升维，获得模型训练能够直接用的数据
-    注意处理顺序
-    :param features_file:
-    :param label_file:
-    :return:
-    """
-    raw_data = get_clean_raw_data(features_file=features_file,
-                                  label_file=label_file)
-    # all_features = num_features + bool_features
-    X = np.array(raw_data[num_features])
-    y = np.array(raw_data['label'])
-    print('特征集文件={},标签文件={}'.format(features_file, label_file))
-    print('原始特征维度：', X.shape[1])
+class SGD:
+    def __init__(self,
+                 features_file_train,
+                 label_file_train,
+                 features_file_test,
+                 label_file_test):
+        # self.clf = svm.SVC(kernel='poly')
+        self.clf = LinearSVC(max_iter=10000, class_weight='balanced')
+        self.cost_time = -1
 
-    # 降维
-    X_extract = features_extraction_3d(X)
+        self.features_file_train = features_file_train
+        self.label_file_train = label_file_train
+        self.features_file_test = features_file_test
+        self.label_file_test = label_file_test
 
-    # imbalanced data processing
-    X_sample, y = imbalanced_handle(X_extract, y)
+        self.X_train, self.y_train = self._prepare_data(training=True)
+        self.X_test, self.y_test = self._prepare_data(training=False)
 
-    # print(X_extract)
+    def _prepare_data(self, training=True):
+        raw_data = get_clean_raw_data(features_file=self.features_file_train,
+                                      label_file=self.label_file_train)
+        # all_features = num_features + bool_features
+        X = np.array(raw_data[num_features])
+        y = np.array(raw_data['label'])
+        print('原始特征维度：', X.shape[1])
 
-    # feature scaling -> 升维 -> feature scaling
-    X_scaled = preprocessing.scale(X_sample)
-    # poly = PolynomialFeatures(degree=3)
-    # X_poly = poly.fit_transform(X_scaled)
-    # X_scaled_poly = preprocessing.scale(X_poly)
+        # imbalanced data processing
+        if training:
+            X, y = imbalanced_handle(X, y)
 
-    X_final = X_scaled
-    print('最终训练集：', X_final.shape)
-    print('最终比例：', Counter(y))
+        # 降维
+        X = features_extraction_3d(X)
 
-    # users_id = raw_data['user_id']
+        # feature scaling -> 升维 -> feature scaling
+        # X = preprocessing.scale(X)
+        # poly = PolynomialFeatures()
+        # X = poly.fit_transform(X)
+        # X = preprocessing.scale(X)
 
-    return X_final, y
+        X_final = X
+        print('最终数据集的特征维度：', X_final.shape[1])
 
+        return X_final, y
 
-def _prepare_data_4_prediction(features_file=None, label_file=None):
-    """
-    降维，feature scaling，升维，获得模型能够直接用的数据
-    预测不需要处理imbalanced data，所以要和prepare_data_4_training分开
-    :param features_file:
-    :param label_file:
-    :return:
-    """
-    raw_data = get_clean_raw_data(features_file=features_file,
-                                  label_file=label_file)
-    X = np.array(raw_data[num_features])
-    y = np.array(raw_data['label'])
-    print('特征集文件={},标签文件={}'.format(features_file, label_file))
-    print('原始特征维度：', X.shape)
+    def run(self):
+        start = time()
+        self.clf.fit(self.X_train, self.y_train)
+        end = time()
+        self.cost_time = end - start
+        y_score_test = self.clf.predict_proba(self.X_test)
 
-    # 降维
-    X_extract = features_extraction_3d(X)
+        y_pred_test = self.clf.predict(self.X_test)
 
-    # feature scaling -> 升维 -> feature scaling
-    X_scaled = preprocessing.scale(X_extract)
-    # poly = PolynomialFeatures(degree=3)
-    # X_poly = poly.fit_transform(X_scaled)
-    # X_scaled_poly = preprocessing.scale(X_poly)
+        roc_auc(y_actual=self.y_test, y_score=y_score_test[:, 1])
+        fscore(y_actual=self.y_test, y_predict=y_pred_test)
 
-    X_final = X_scaled
-    print('最终测试集：', X_final.shape)
-    print('最终比例：', Counter(y))
-    #
-    # users_id = np.array(raw_data['user_id'])
-
-    return X_final, y
-
-
-def linear_kernel():
-    beep()
-    X_train, y_train = prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
-                                               label_file='../../data/3月被投诉用户.csv')
-
-    X_test, y_test, _ = prepare_data_4_prediction(features_file='../../data/3月用户相关数据.csv',
-                                               label_file='../../data/3月被投诉用户.csv')
-    clf = LinearSVC(max_iter=10000, class_weight='balanced')
-
-    clf.fit(X_train, y_train)
-
-    y_score_test = clf.predict_proba(X_test)
-
-    y_pred_test = clf.predict(X_test)
-    roc_auc(y_actual=y_test, y_score=y_score_test[:, 1])
-    fscore(y_actual=y_test, y_predict=y_pred_test)
-
-    beep()
-    print('done')
-
-
-def high_kernel():
-    from sklearn import svm
-    beep()
-    X_train, y_train = _prepare_data_4_training(features_file='../../data/3月用户相关数据.csv',
-                                   label_file='../../data/3月被投诉用户.csv')
-    X_test, y_test = _prepare_data_4_prediction(features_file='../../data/3月用户相关数据.csv',
-                                   label_file='../../data/3月被投诉用户.csv')
-
-    clf = svm.SVC(kernel='poly')
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-    fscore(y_actual=y_test, y_predict=y_pred)
-    beep()
+        # self._print_importances()
+        # self._visual()
 
 
 def main():
-    linear_kernel()
+    features_file_train = '../../data/3月用户相关数据.csv'
+    label_file_train = '../../data/3月被投诉用户.csv'
+    features_file_test = '../../data/4月用户相关数据.csv'
+    label_file_test = '../../data/4月被投诉用户.csv'
+
+    model = SGD(features_file_train=features_file_train,
+                label_file_train=label_file_train,
+                features_file_test=features_file_test,
+                label_file_test=label_file_test)
+
+    model.run()
+    print('消耗时间:{}'.format(model.cost_time))
 
 
 if __name__ == '__main__':
