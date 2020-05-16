@@ -7,7 +7,7 @@ from data_processing.data_utils import get_clean_raw_data, num_features
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
 from evaluation.imbalanced_evaluation import roc_auc, fscore
-
+from time import time
 
 def _prepare_data_4_training(features_file=None, label_file=None):
     """
@@ -76,6 +76,7 @@ def anomaly_detection():
                                                 label_file='../../data/3月被投诉用户.csv')
     X_test, y_test, _ = _prepare_data_4_prediction(features_file='../../data/4月用户相关数据.csv',
                                                    label_file='../../data/4月被投诉用户.csv')
+    start = time()
     m_train, n = np.shape(X_train)
     mu = np.sum(X_train, 0) / m_train
     delta = X_train - mu
@@ -89,14 +90,18 @@ def anomaly_detection():
         k = np.exp(-delta2 / 2 / sigma2) / coe
         p[i] = np.prod(k)
 
+    end = time()
+
+    cost_time = end - start
+    print('消耗时间：{}'.format(cost_time))
     indices = np.where(y_test == 1)
     # print(p)
     # print('indies: ',p[indices])
     y_pre = np.zeros(m_test)
-    threshold = 3.5e-014
-    for i, pi in enumerate(p):
-        if pi < threshold:
-            y_pre[i] = 1
+    # threshold = 3.5e-014
+    # for i, pi in enumerate(p):
+    #     if pi < threshold:
+    #         y_pre[i] = 1
     fscore(y_actual=y_test, y_predict=y_pre)
     roc_auc(y_actual=y_test, y_score=p)
 

@@ -31,7 +31,7 @@ class VisualEvaluation:
             plt.text(a + 3 * width, b, b, ha='center', va='bottom')
 
         plt.xticks()
-        plt.legend(loc=[0, 0])
+        plt.legend()
 
         plt.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         # plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示中文标签
@@ -67,13 +67,13 @@ class VisualEvaluation:
 
 
 def main():
-    bars = ['不降维,不采样', '不降维,采样', '降维,采样', '降维,不采样']
-    precision = [1, 0.45, 0.02, 1]
-    recall = [0.70, 0.70, 0.05, 0.70]
-    f1_score = [0.80, 0.55, 0.03, 0.80]
-    auc = [0.94, 0.93, 0.59, 0.94]
-    time = [57.74, 179.53, 137.54, 63.25]
-    title = '随机森林'
+    bars = ['孤立森林', '高斯异常检测', '局部异常因子']
+    precision = [0.01, 0.001, 0.003]
+    recall = [0.82, 0.01, 0.34]
+    f1_score = [0.02, 0.01, 0.05]
+    auc = [0.94, 0.80, 0.62]
+    time = [3.95, 7.11, 1936.57]
+    title = ''
     ve = VisualEvaluation()
     ve.evaluation(bars=bars, precision=precision,
                   recall=recall, f1_score=f1_score,

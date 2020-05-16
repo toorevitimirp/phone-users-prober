@@ -5,7 +5,7 @@ from sklearn.ensemble import IsolationForest
 from data_processing.data_utils import get_clean_raw_data, num_features
 from data_processing.dimension_reduction import features_extraction_3d
 from evaluation.imbalanced_evaluation import roc_auc, fscore
-
+from time import time
 
 def _prepare_data(features_file=None,
                   label_file=None):
@@ -29,10 +29,13 @@ def anomaly_detection():
                                      label_file='../../data/3月被投诉用户.csv')
     X_test, y_test = _prepare_data(features_file='../../data/4月用户相关数据.csv',
                                    label_file='../../data/4月被投诉用户.csv')
-    outliers_fraction = 0.0007
-    clf = IsolationForest(contamination=outliers_fraction)
+    # outliers_fraction = 0.0007
+    clf = IsolationForest()
+    start = time()
     clf.fit(X_train)
-
+    end = time()
+    cost_time = end - start
+    print('消耗时间:{}'.format(cost_time))
     y_pred = clf.predict(X_test)
     # 孤立森林的预测结果中，-1表示异常，1表示正常
     for i, _ in enumerate(y_pred):

@@ -60,3 +60,5 @@ https://www.ibm.com/developerworks/cn/opensource/os-cn-datamining/index.html
 https://zhuanlan.zhihu.com/p/58868995
 
 https://github.com/apachecn/pytorch-doc-zh/blob/master/docs/1.0/pytorch_with_examples.md
+
+https://www.bilibili.com/video/BV1Y7411d7Ys?from=search&seid=10164323566244912932

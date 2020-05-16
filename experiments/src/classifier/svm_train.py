@@ -1,3 +1,5 @@
+from sklearn.calibration import CalibratedClassifierCV
+
 import common
 import numpy as np
 from sklearn.svm import LinearSVC
@@ -9,20 +11,19 @@ from sklearn.preprocessing import PolynomialFeatures
 from data_processing.dimension_reduction import features_extraction_3d
 from data_processing.imbalance_handle import imbalanced_handle
 from evaluation.imbalanced_evaluation import fscore, roc_auc
-from sklearn import tree
-from sklearn.ensemble import RandomForestClassifier
 from time import time
 from other_utils import beep
 
 
-class SGD:
+class SVM:
     def __init__(self,
                  features_file_train,
                  label_file_train,
                  features_file_test,
                  label_file_test):
         # self.clf = svm.SVC(kernel='poly')
-        self.clf = LinearSVC(max_iter=10000, class_weight='balanced')
+        svm = LinearSVC(max_iter=10000, class_weight='balanced')
+        self.clf = CalibratedClassifierCV(svm)
         self.cost_time = -1
 
         self.features_file_train = features_file_train
@@ -36,14 +37,13 @@ class SGD:
     def _prepare_data(self, training=True):
         raw_data = get_clean_raw_data(features_file=self.features_file_train,
                                       label_file=self.label_file_train)
-        # all_features = num_features + bool_features
         X = np.array(raw_data[num_features])
         y = np.array(raw_data['label'])
         print('原始特征维度：', X.shape[1])
 
         # imbalanced data processing
-        if training:
-            X, y = imbalanced_handle(X, y)
+        # if training:
+            # X, y = imbalanced_handle(X, y)
 
         # 降维
         X = features_extraction_3d(X)
@@ -71,9 +71,6 @@ class SGD:
         roc_auc(y_actual=self.y_test, y_score=y_score_test[:, 1])
         fscore(y_actual=self.y_test, y_predict=y_pred_test)
 
-        # self._print_importances()
-        # self._visual()
-
 
 def main():
     features_file_train = '../../data/3月用户相关数据.csv'
@@ -81,12 +78,13 @@ def main():
     features_file_test = '../../data/4月用户相关数据.csv'
     label_file_test = '../../data/4月被投诉用户.csv'
 
-    model = SGD(features_file_train=features_file_train,
+    model = SVM(features_file_train=features_file_train,
                 label_file_train=label_file_train,
                 features_file_test=features_file_test,
                 label_file_test=label_file_test)
-
+    beep()
     model.run()
+    beep()
     print('消耗时间:{}'.format(model.cost_time))
 
 
