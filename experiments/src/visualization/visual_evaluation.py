@@ -67,12 +67,12 @@ class VisualEvaluation:
 
 
 def main():
-    bars = ['孤立森林', '高斯异常检测', '局部异常因子']
-    precision = [0.01, 0.001, 0.003]
-    recall = [0.82, 0.01, 0.34]
-    f1_score = [0.02, 0.01, 0.05]
-    auc = [0.94, 0.80, 0.62]
-    time = [3.95, 7.11, 1936.57]
+    bars = ['随机上采样', 'SMOTE', 'SMOTE+TomekLinks','SMOTE+ENN','不采样']
+    precision = [0.007, 0.002,0.003, 0.002, 0.006]
+    recall = [0.92, 0.86, 0.84,0.85,0.45]
+    f1_score = [0.002, 0.004, 0.005,0.005,0.013]
+    auc = [0.79, 0.81, 0.82,0.80,0.81]
+    time = [0.51, 0.89, 5021.20, 4849.65,0]
     title = ''
     ve = VisualEvaluation()
     ve.evaluation(bars=bars, precision=precision,

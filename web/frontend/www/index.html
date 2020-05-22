@@ -39,17 +39,19 @@
             </dl>
           </li>
           <li class="layui-nav-item">
-            <a href="javascript:;">训练</a>
+            <a href="javascript:;">训练与预测</a>
+            
             <dl class="layui-nav-child">
-              <dd><a onclick="sgd_train()">SGD Classifier</a></dd>
+              <dd><a onclick="train()">训练</a></dd>
+              <dd><a onclick="pred()">预测</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item">
-            <a href="javascript:;">预测</a>
+          <!-- <li class="layui-nav-item">
+            <a onclick="pred()">预测</a>
             <dl class="layui-nav-child">
-              <dd><a onclick="sgd_pred()">SGD Classifier</a></dd>
+              <dd><a onclick="pred()">预测</a></dd>
             </dl>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -133,13 +135,13 @@
     var iframe = document.getElementById("content")
     iframe.src = "/html/visualization/pie.html"
   }
-  function sgd_train(){
+  function train(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/training/sgd.html"
+    iframe.src = "/html/training/index.html"
   }
-  function sgd_pred(){
+  function pred(){
     var iframe = document.getElementById("content")
-    iframe.src = "/html/prediction/sgd.html"
+    iframe.src = "/html/prediction/index.html"
   }
 </script>
 </body>

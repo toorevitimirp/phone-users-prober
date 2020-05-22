@@ -173,20 +173,20 @@ def imbalanced_handle(X, y):
     return X_sampled, y_sampled
 
 
-# def main():
-#     from data_processing.data_utils import get_clean_raw_data, num_features
-#     raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
-#                                   label_file='../../data/3月被投诉用户.csv')
-#     X = np.array(raw_data[num_features])
-#     y = np.array(raw_data['label'])
-#
-#     X_sampled, y_sampled = imbalanced_handle(X, y)
-#     X = features_extraction_3d(X_sampled, y_sampled)
-#     visualization_lda(X, y_sampled)
-#     # magnifier(X_3d, y)
-#     # num_scatter_3d_all(X_3d, y)
-#     # visualization_sampled_data(X_3d, y_sampled)
-#
-#
-# if __name__ == '__main__':
-#     main()
+def main():
+    from data_processing.data_utils import get_clean_raw_data, num_features
+    raw_data = get_clean_raw_data(features_file='../../data/3月用户相关数据.csv',
+                                  label_file='../../data/3月被投诉用户.csv')
+    X = np.array(raw_data[num_features])
+    y = np.array(raw_data['label'])
+
+    # X_sampled, y_sampled = imbalanced_handle(X, y)
+    X = features_extraction_3d(X)
+    # visualization_lda(X, y_sampled)
+    # magnifier(X_3d, y)
+    # num_scatter_3d_all(X_3d, y)
+    visualization_sampled_data(X, y)
+
+
+if __name__ == '__main__':
+    main()
